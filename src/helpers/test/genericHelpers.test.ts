@@ -1,4 +1,4 @@
-import { isNilOrEmpty } from '../helpers';
+import { isNilOrEmpty } from '../genericHelpers';
 
 describe('isNilOrEmpty', () => {
   it('returns true when there are no elements', () => {

@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { isNilOrEmpty } from './helpers';
+import { isNilOrEmpty } from './helpers/genericHelpers';
 
 const app = express();
 const PORT: string | number = process.env.PORT || 3001;

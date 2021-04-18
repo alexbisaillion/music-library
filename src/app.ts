@@ -1,14 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { isNilOrEmpty } from './helpers/genericHelpers';
+import { lastfmApiRouter } from './lastfm-api/lastfmApiRoutes';
+import { areAnyEnvVarsMissing } from './helpers/environmentVariables';
 
 const app = express();
 const PORT: string | number = process.env.PORT || 3001;
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
-
-const requiredEnvVars = ['MONGO_CLUSTER', 'MONGO_DB', 'MONGO_PASSWORD', 'MONGO_USER'];
-const getMissingEnvVars = () => requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 app.use(
   cors({
@@ -17,11 +15,11 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(lastfmApiRouter);
 
 const startServer = async () => {
-  const missingEnvVars = getMissingEnvVars();
-  if (!isNilOrEmpty(missingEnvVars)) {
-    console.error(`Missing environment variables: ${missingEnvVars}`);
+  if (areAnyEnvVarsMissing()) {
+    console.error(`Missing environment variables.`);
     return;
   }
 

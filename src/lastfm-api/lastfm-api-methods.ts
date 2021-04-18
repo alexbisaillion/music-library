@@ -1,5 +1,5 @@
-import { LastfmMethod } from './lastfmApiTypes';
-import { makeAuthenticatedRequest } from './lastfmApiUtilities';
+import { LastfmMethod } from './lastfm-api-types';
+import { makeAuthenticatedRequest } from './lastfm-api-utilities';
 
 export type ScrobblePlayParams = {
   timestamp: number;

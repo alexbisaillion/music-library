@@ -1,8 +1,8 @@
 import { createHash } from 'crypto';
 import { stringify } from 'querystring';
 import fetch, { Response } from 'node-fetch';
-import { EnvironmentVariable, getEnvVar } from '../helpers/environmentVariables';
-import { LastfmMethod } from './lastfmApiTypes';
+import { EnvironmentVariable, getEnvVar } from '../helpers/environment-variables';
+import { LastfmMethod } from './lastfm-api-types';
 
 export const generateMethodSignature = (sharedSecret: string, methodParams: Record<string, string>): string => {
   const signature =

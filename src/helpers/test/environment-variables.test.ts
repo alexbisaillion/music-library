@@ -1,6 +1,6 @@
-import { areAnyEnvVarsMissing, EnvironmentVariable, getEnvVar } from '../environmentVariables';
+import { areAnyEnvVarsMissing, EnvironmentVariable, getEnvVar } from '../environment-variables';
 
-describe('environmentVariables', () => {
+describe('environment-variables', () => {
   afterEach(() => {
     process.env = {};
   });

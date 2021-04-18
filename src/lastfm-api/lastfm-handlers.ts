@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { scrobblePlay } from './lastfmApiMethods';
+import { scrobblePlay } from './lastfm-api-methods';
 import { sendError, sendSuccess, ErrorCode, SuccessCode } from '../helpers/routing';
 
 export const handleScrobblePlay = async (req: Request, res: Response): Promise<void> => {

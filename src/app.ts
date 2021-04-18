@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { lastfmApiRouter } from './lastfm-api/lastfmApiRoutes';
-import { areAnyEnvVarsMissing } from './helpers/environmentVariables';
+import { lastfmApiRouter } from './lastfm-api/lastfm-routes';
+import { areAnyEnvVarsMissing } from './helpers/environment-variables';
 
 const app = express();
 const PORT: string | number = process.env.PORT || 3001;

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handleScrobblePlay } from './lastfmApiHandlers';
+import { handleScrobblePlay } from './lastfm-handlers';
 
 export const lastfmApiRouter = Router();
 

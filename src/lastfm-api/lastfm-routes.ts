@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { handleGetTopTracks, handleScrobblePlay } from './lastfm-handlers';
 
-export const lastfmApiRouter = Router();
+export const lastfmRouter = Router();
 
-lastfmApiRouter.post('/lastfm/scrobblePlay', handleScrobblePlay);
-lastfmApiRouter.get('/lastfm/getTopTracks', handleGetTopTracks);
+const routeURL = (route: string) => `/lastfm/${route}`;
+lastfmRouter.post(routeURL('scrobblePlay'), handleScrobblePlay);
+lastfmRouter.get(routeURL('getTopTracks'), handleGetTopTracks);

@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { lastfmApiRouter } from './lastfm-api/lastfm-routes';
+import { lastfmRouter } from './lastfm-api/lastfm-routes';
+import { spotifyRouter } from './spotify-api/spotify-routes';
 import { areAnyEnvVarsMissing } from './helpers/environment-variables';
 
 const app = express();
@@ -15,7 +16,8 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(lastfmApiRouter);
+app.use(lastfmRouter);
+app.use(spotifyRouter);
 
 const startServer = async () => {
   if (areAnyEnvVarsMissing()) {

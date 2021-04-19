@@ -39,7 +39,7 @@ export const generateAuthenticatedUrl = (params: GenerateAuthenticatedUrlParams)
   )}`;
 };
 
-export const makeAuthenticatedRequest = (
+export const makeLastfmAuthenticatedRequest = (
   method: LastfmMethod,
   methodParams: Record<string, string | number>,
   externalUser?: string
@@ -54,7 +54,7 @@ export const makeAuthenticatedRequest = (
   return fetch(generateAuthenticatedUrl(urlParams), { method: 'POST' });
 };
 
-export const makeRequest = (
+export const makeLastfmRequest = (
   method: LastfmMethod,
   methodParams: Record<string, string | number>,
   externalUser?: string

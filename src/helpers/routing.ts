@@ -18,3 +18,7 @@ export enum ErrorCode {
 export const sendError = (res: Response, code: ErrorCode, errorMessage: string): void => {
   res.status(code).json({ success: false, error: errorMessage });
 };
+
+export const sendSuccessContent = <T>(res: Response, code: SuccessCode, content: T): void => {
+  res.status(code).json(content);
+};

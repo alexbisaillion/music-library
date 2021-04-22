@@ -2,9 +2,8 @@ import { Response, Request } from 'express';
 import { isNilOrEmpty } from '../helpers/generic-helpers';
 import { sendError, ErrorCode, sendSuccessContent, SuccessCode } from '../helpers/routing';
 import { getRecentPlays } from '../spotify-api/spotify-api-methods';
-import { Track, TrackModel } from '../models/track-model';
-import { processNewTrack } from './storage-consumers';
-import { Play, PlayModel } from '../models/play-model';
+import { getTrack, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
+import { Play } from '../models/play-model';
 
 export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -19,27 +18,18 @@ export const handleRefreshPlays = async (req: Request, res: Response): Promise<v
     if (spotifyPlays) {
       // TODO: sort plays by timestamp in order to break out of the loop instead of continue.
       for (const play of spotifyPlays) {
-        if (await PlayModel.exists({ timestamp: play.timestamp })) {
+        if (await hasPlayBeenRegistered(play.timestamp)) {
           continue;
         }
-        let track: Track | undefined | null = await TrackModel.findOne({ spotifyId: play.spotifyTrackId });
-        if (!track) {
-          track = await processNewTrack(play.spotifyTrackId);
-        }
+
+        const track = await getTrack(play.spotifyTrackId);
 
         if (!track) {
           sendError(res, ErrorCode.InternalServerError, 'Failed to get track details from the spotify API');
           return;
         }
 
-        await track.updateOne({ $push: { plays: play.timestamp } });
-
-        newPlays.push(
-          await PlayModel.create({
-            track: track._id,
-            timestamp: play.timestamp
-          })
-        );
+        newPlays.push(await registerPlay(track, play.timestamp));
       }
     }
 

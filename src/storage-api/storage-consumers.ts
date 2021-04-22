@@ -1,9 +1,27 @@
 import { Artist, ArtistModel } from '../models/artist-model';
+import { Play, PlayModel } from '../models/play-model';
 import { Release, ReleaseModel, ReleaseType } from '../models/release-model';
 import { Track, TrackModel } from '../models/track-model';
 import { getTrackDetails } from '../spotify-api/spotify-api-methods';
 
-export const processNewTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
+export const hasPlayBeenRegistered = async (timestamp: number): Promise<boolean> => {
+  return PlayModel.exists({ timestamp: timestamp });
+};
+
+export const registerPlay = async (track: Track, timestamp: number): Promise<Play> => {
+  await track.updateOne({ $push: { plays: timestamp } });
+  return PlayModel.create({ track: track._id, timestamp: timestamp });
+};
+
+export const getTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
+  let track: Track | undefined | null = await TrackModel.findOne({ spotifyId: spotifyTrackId });
+  if (!track) {
+    track = await processNewTrack(spotifyTrackId);
+  }
+  return track;
+};
+
+const processNewTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
   const details = await getTrackDetails(spotifyTrackId);
   if (!details) {
     return undefined;
@@ -27,13 +45,13 @@ export const processNewTrack = async (spotifyTrackId: string): Promise<Track | u
     plays: []
   });
 
-  await release.update({ $push: { tracks: track._id } });
+  await release.updateOne({ $push: { tracks: track._id } });
 
   return track;
 };
 
-export const processNewArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Promise<Artist> => {
-  return await ArtistModel.create({
+const processNewArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Promise<Artist> => {
+  return ArtistModel.create({
     name: artist.name,
     spotifyId: artist.id,
     releases: []
@@ -50,7 +68,7 @@ const convertAlbumType = (albumType: 'album' | 'single' | 'compilation'): Releas
       return ReleaseType.Compilation;
   }
 };
-export const processNewRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promise<Release> => {
+const processNewRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promise<Release> => {
   // Get the artist documents, or create them if they don't exist.
   const artistReferences = await Promise.all(
     album.artists.map(async (artist) => {
@@ -69,7 +87,7 @@ export const processNewRelease = async (album: SpotifyApi.AlbumObjectSimplified)
 
   // Add a reference to the release in the artist documents.
   for (const artist of artistReferences) {
-    await artist.update({ $push: { releases: release._id } });
+    await artist.updateOne({ $push: { releases: release._id } });
   }
 
   return release;

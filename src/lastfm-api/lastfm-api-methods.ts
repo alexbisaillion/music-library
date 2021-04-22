@@ -1,6 +1,5 @@
 import { LastfmMethod, LastfmPaginationParams } from './lastfm-api-types';
 import { makeLastfmAuthenticatedRequest, makeLastfmRequest } from './lastfm-api-utilities';
-import { RawTrack } from '../models/track-model';
 
 export type ScrobblePlayParams = {
   timestamp: number;
@@ -16,6 +15,10 @@ export const scrobblePlay = async (params: ScrobblePlayParams): Promise<boolean>
   return response.status === 200 && !body['error'] && body['scrobbles']['@attr']['accepted'] > 0;
 };
 
+type RawTrack = {
+  track: string;
+  artist: string;
+};
 export const getTopTracks = async (params: LastfmPaginationParams): Promise<RawTrack[] | undefined> => {
   const response = await makeLastfmRequest(LastfmMethod.GetTopTracks, params);
   const body = await response.json();

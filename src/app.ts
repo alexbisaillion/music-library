@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { lastfmRouter } from './lastfm-api/lastfm-routes';
 import { spotifyRouter } from './spotify-api/spotify-routes';
+import { storageRouter } from './storage-api/storage-routes';
 import { areAnyEnvVarsMissing } from './helpers/environment-variables';
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(
 app.use(express.json());
 app.use(lastfmRouter);
 app.use(spotifyRouter);
+app.use(storageRouter);
 
 const startServer = async () => {
   if (areAnyEnvVarsMissing()) {

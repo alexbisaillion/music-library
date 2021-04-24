@@ -5,6 +5,7 @@ import { lastfmRouter } from './lastfm-api/lastfm-routes';
 import { spotifyRouter } from './spotify-api/spotify-routes';
 import { storageRouter } from './storage-api/storage-routes';
 import { areAnyEnvVarsMissing } from './helpers/environment-variables';
+import { validateSecret } from './helpers/routing';
 
 const app = express();
 const PORT: string | number = process.env.PORT || 3001;
@@ -17,6 +18,8 @@ app.use(
   })
 );
 app.use(express.json());
+
+app.post('*', validateSecret); // Validate that every POST request supplies the correct secret.
 app.use(lastfmRouter);
 app.use(spotifyRouter);
 app.use(storageRouter);

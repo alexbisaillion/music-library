@@ -40,3 +40,22 @@ export const getTrackDetails = async (spotifyTrackId: string): Promise<SpotifyTr
     album: response.body.album
   };
 };
+
+export const getAlbumTrackIds = async (spotifyAlbumId: string): Promise<string[] | undefined> => {
+  let offset = 0;
+  const trackIds: string[] = [];
+
+  do {
+    const response = await makeSpotifyRequest(() => spotifyApiWrapper.getAlbumTracks(spotifyAlbumId));
+
+    if (response.statusCode !== 200 || !response.body.items) {
+      return undefined;
+    }
+
+    trackIds.push(...response.body.items.map((track) => track.id));
+
+    offset = response.body.next === null ? 0 : offset + 50;
+  } while (offset > 0);
+
+  return trackIds;
+};

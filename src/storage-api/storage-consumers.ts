@@ -49,7 +49,7 @@ const getScrobblePlayParams = async (track: Track, timestamp: number): Promise<S
   };
 };
 
-export const getTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
+export const getOrProcessTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
   let track: Track | undefined | null = await TrackModel.findOne({ spotifyId: spotifyTrackId });
   if (!track) {
     track = await processNewTrack(spotifyTrackId);
@@ -127,4 +127,8 @@ const processNewRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promi
   }
 
   return release;
+};
+
+export const getRelease = async (spotifyAlbumId: string): Promise<Release | null> => {
+  return ReleaseModel.findOne({ spotifyId: spotifyAlbumId });
 };

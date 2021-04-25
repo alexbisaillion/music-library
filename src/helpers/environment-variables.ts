@@ -8,6 +8,7 @@ export enum EnvironmentVariable {
   MongoDB = 'MONGO_DB',
   MongoPassword = 'MONGO_PASSWORD',
   MongoUser = 'MONGO_USER',
+  RootDirectory = 'ROOT_DIR',
   Secret = 'SECRET',
   SpotifyClientId = 'SPOTIFY_CLIENT_ID',
   SpotifyClientSecret = 'SPOTIFY_CLIENT_SECRET',

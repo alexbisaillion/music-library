@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import { lastfmRouter } from './lastfm-api/lastfm-routes';
@@ -23,6 +24,13 @@ app.post('*', validateSecret); // Validate that every POST request supplies the 
 app.use(lastfmRouter);
 app.use(spotifyRouter);
 app.use(storageRouter);
+
+// Serve static files from the React app
+app.use(express.static(`${process.env.ROOT_DIR}/src/client/build`));
+app.get('/*', (_req, res) => {
+  const url = path.join(`${process.env.ROOT_DIR}/src/client/build`, 'index.html');
+  res.sendFile(url);
+});
 
 const startServer = async () => {
   if (areAnyEnvVarsMissing()) {

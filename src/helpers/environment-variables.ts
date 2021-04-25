@@ -1,4 +1,6 @@
 export enum EnvironmentVariable {
+  ApplicationUsername = 'APPLICATION_USERNAME',
+  ApplicationPassword = 'APPLICATION_PASSWORD',
   JobUrl = 'JOB_URL',
   LastfmApiKey = 'LASTFM_API_KEY',
   LastfmSession = 'LASTFM_SESSION',

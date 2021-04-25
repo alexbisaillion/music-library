@@ -23,18 +23,3 @@ export const sendError = (res: Response, code: ErrorCode, errorMessage: string):
 export const sendSuccessContent = <T>(res: Response, code: SuccessCode, content: T): void => {
   res.status(code).json(content);
 };
-
-export const validateSecret = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const secret = req.body?.secret;
-
-  if (!secret) {
-    sendError(res, ErrorCode.Unauthorized, 'Please provide the secret to access restricted endpoints.');
-    return;
-  }
-  if (secret !== getEnvVar(EnvironmentVariable.Secret)) {
-    sendError(res, ErrorCode.Unauthorized, 'The provided secret is invalid.');
-    return;
-  }
-
-  next();
-};

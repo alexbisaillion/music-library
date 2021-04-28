@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import { isNilOrEmpty } from '../helpers/generic-helpers';
 import { sendError, ErrorCode, sendSuccessContent, SuccessCode } from '../helpers/routing';
 import { getAlbumTrackIds, getRecentPlays } from '../spotify-api/spotify-api-methods';
-import { getOrProcessTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
+import { getOrCreateTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
 import { Play } from '../models/play-model';
 
 export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
@@ -22,7 +22,7 @@ export const handleRefreshPlays = async (req: Request, res: Response): Promise<v
           continue;
         }
 
-        const track = await getOrProcessTrack(play.spotifyTrackId);
+        const track = await getOrCreateTrack(play.spotifyTrackId);
 
         if (!track) {
           sendError(res, ErrorCode.InternalServerError, 'Failed to get track details from the spotify API');
@@ -53,7 +53,7 @@ export const handleRegisterRelease = async (req: Request, res: Response): Promis
   }
 
   for (const trackId of trackIds) {
-    await getOrProcessTrack(trackId);
+    await getOrCreateTrack(trackId);
   }
 
   const release = await getRelease(spotifyAlbumId);

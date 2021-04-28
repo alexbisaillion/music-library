@@ -10,6 +10,11 @@
   ],
   "rules": {
     "prefer-template": "error",
-    "prettier/prettier": 2
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   }
 }

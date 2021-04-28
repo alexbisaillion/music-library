@@ -1,9 +1,11 @@
-import { scrobblePlay, ScrobblePlayParams } from '../lastfm-api/lastfm-api-methods';
+import { scrobblePlay } from '../lastfm-api/lastfm-api-methods';
 import { Artist, ArtistModel } from '../models/artist-model';
 import { Play, PlayModel } from '../models/play-model';
-import { Release, ReleaseModel, ReleaseType } from '../models/release-model';
+import { Release, ReleaseModel } from '../models/release-model';
 import { Track, TrackModel } from '../models/track-model';
 import { getTrackDetails } from '../spotify-api/spotify-api-methods';
+import { SpotifyTrackModel, SpotifyAlbumModel, SpotifyArtistModel } from '../models/spotify-models';
+import { getScrobblePlayParams, convertAlbumType } from './storage-converters';
 
 export const hasPlayBeenRegistered = async (timestamp: number): Promise<boolean> => {
   return PlayModel.exists({ timestamp: timestamp });
@@ -15,120 +17,111 @@ export const registerPlay = async (track: Track, timestamp: number): Promise<Pla
   return PlayModel.create({ track: track._id, timestamp: timestamp });
 };
 
-const formatAlbumArtists = (names: string[]): string => {
-  if (names.length === 1) {
-    return names[0];
+const getTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
+  const spotifyTrack = await SpotifyTrackModel.findOne({ spotifyId: spotifyTrackId });
+  if (spotifyTrack) {
+    return (await spotifyTrack.populate('track').execPopulate()).track as Track;
   }
-  if (names.length === 2) {
-    return `${names[0]} & ${names[1]}`;
-  }
-  return names.reduce((formattedAlbumArtist, currentArtist, index) => {
-    if (index < names.length - 1) {
-      return `${formattedAlbumArtist}${currentArtist}, `;
-    }
-    return `${formattedAlbumArtist} & ${currentArtist}`;
-  }, '' as string);
+  return undefined;
 };
 
-const getScrobblePlayParams = async (track: Track, timestamp: number): Promise<ScrobblePlayParams> => {
-  const fullTrack = await track
-    .populate('artists')
-    .populate({ path: 'primaryRelease', populate: { path: 'artists' } })
-    .execPopulate();
-
-  const release = fullTrack.primaryRelease as Release;
-  const artists = fullTrack.artists as Artist[];
-  const albumArtists = release.artists as Artist[];
-
-  return {
-    track: fullTrack.title,
-    album: release.title,
-    artist: artists[0].name,
-    albumArtist: formatAlbumArtists(albumArtists.map((artist) => artist.name)),
-    timestamp
-  };
-};
-
-export const getOrProcessTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
-  let track: Track | undefined | null = await TrackModel.findOne({ spotifyId: spotifyTrackId });
-  if (!track) {
-    track = await processNewTrack(spotifyTrackId);
+export const getOrCreateTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
+  const spotifyTrack = await getTrack(spotifyTrackId);
+  if (spotifyTrack) {
+    return spotifyTrack;
   }
-  return track;
-};
 
-const processNewTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
   const details = await getTrackDetails(spotifyTrackId);
   if (!details) {
     return undefined;
   }
+
   const { artists, album } = details;
 
-  const release = (await ReleaseModel.findOne({ spotifyId: album.id })) || (await processNewRelease(album));
+  const artistReferences = await Promise.all(artists.map((artist) => getOrCreateArtist(artist)));
+  const release = await getOrCreateRelease(album);
 
-  const artistReferences = await Promise.all(
-    artists.map(async (artist) => {
-      return (await ArtistModel.findOne({ spotifyId: artist.id })) || (await processNewArtist(artist));
-    })
-  );
-
-  const track = await TrackModel.create({
+  const trackDocument = await TrackModel.create({
     title: details.title,
-    spotifyId: details.spotifyTrackId,
+    spotifyIds: [details.spotifyTrackId],
     artists: artistReferences.map((artistReference) => artistReference._id),
     primaryRelease: release._id,
     secondaryReleases: [],
     plays: []
   });
 
-  await release.updateOne({ $push: { tracks: track._id } });
+  await SpotifyTrackModel.create({
+    spotifyId: details.spotifyTrackId,
+    track: trackDocument._id
+  });
 
-  return track;
+  await release.updateOne({ $push: { tracks: trackDocument._id } });
+
+  return trackDocument;
 };
 
-const processNewArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Promise<Artist> => {
-  return ArtistModel.create({
+const getArtist = async (spotifyArtistId: string): Promise<Artist | undefined> => {
+  const spotifyArtist = await SpotifyArtistModel.findOne({ spotifyId: spotifyArtistId });
+  if (spotifyArtist) {
+    return (await spotifyArtist.populate('artist').execPopulate()).artist as Artist;
+  }
+  return undefined;
+};
+
+const getOrCreateArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Promise<Artist> => {
+  const spotifyArtist = await getArtist(artist.id);
+  if (spotifyArtist) {
+    return spotifyArtist;
+  }
+
+  const artistDocument = await ArtistModel.create({
     name: artist.name,
-    spotifyId: artist.id,
+    spotifyIds: [artist.id],
     releases: []
   });
+
+  await SpotifyArtistModel.create({
+    spotifyId: artist.id,
+    artist: artistDocument._id
+  });
+
+  return artistDocument;
 };
 
-const convertAlbumType = (albumType: 'album' | 'single' | 'compilation'): ReleaseType => {
-  switch (albumType) {
-    case 'album':
-      return ReleaseType.Album;
-    case 'single':
-      return ReleaseType.Single;
-    default:
-      return ReleaseType.Compilation;
+export const getRelease = async (spotifyAlbumId: string): Promise<Release | undefined> => {
+  const spotifyAlbum = await SpotifyAlbumModel.findOne({ spotifyId: spotifyAlbumId });
+  if (spotifyAlbum) {
+    return (await spotifyAlbum.populate('album').execPopulate()).album as Release;
   }
+  return undefined;
 };
-const processNewRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promise<Release> => {
+const getOrCreateRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promise<Release> => {
+  const spotifyAlbum = await getRelease(album.id);
+  if (spotifyAlbum) {
+    return spotifyAlbum;
+  }
+
   // Get the artist documents, or create them if they don't exist.
-  const artistReferences = await Promise.all(
-    album.artists.map(async (artist) => {
-      return (await ArtistModel.findOne({ spotifyId: artist.id })) || (await processNewArtist(artist));
-    })
-  );
+  const artistReferences = await Promise.all(album.artists.map((artist) => getOrCreateArtist(artist)));
 
   // Create the new release document.
-  const release = await ReleaseModel.create({
+  const releaseDocument = await ReleaseModel.create({
     title: album.name,
-    spotifyId: album.id,
+    spotifyIds: [album.id],
     releaseType: convertAlbumType(album.album_type),
     artists: artistReferences.map((artistReference) => artistReference._id),
     tracks: []
   });
 
+  await SpotifyAlbumModel.create({
+    spotifyId: album.id,
+    album: releaseDocument._id
+  });
+
   // Add a reference to the release in the artist documents.
   for (const artist of artistReferences) {
-    await artist.updateOne({ $push: { releases: release._id } });
+    await artist.updateOne({ $push: { releases: releaseDocument._id } });
   }
 
-  return release;
-};
-
-export const getRelease = async (spotifyAlbumId: string): Promise<Release | null> => {
-  return ReleaseModel.findOne({ spotifyId: spotifyAlbumId });
+  return releaseDocument;
 };

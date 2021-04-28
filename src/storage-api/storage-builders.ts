@@ -1,21 +1,23 @@
 import { Release } from '../models/release-model';
-import { getArtist, getRelease, getTrack } from './storage-consumers';
-import {
-  SpotifyAlbumDetails,
-  getAlbumDetails,
-  getArtistDetails,
-  SpotifyTrackDetails,
-  getTrackDetails
-} from '../spotify-api/spotify-api-methods';
-import { Artist } from '../models/artist-model';
+import { getRelease, getTrack } from './storage-consumers';
+import { getAlbumDetails, getTrackDetails } from '../spotify-api/spotify-api-methods';
 import { Track } from '../models/track-model';
 
+type SuggestedArtist = {
+  spotifyArtistId: string;
+  name: string;
+};
+
+type SuggestedRelease = {
+  spotifyAlbumId: string;
+  name: string;
+  releaseType: 'album' | 'single' | 'compilation';
+  albumArtists: SuggestedArtist[];
+};
 type ReleaseParamsResult = {
   isRegistered: boolean;
   existingRelease?: Release;
-  spotifyRelease?: SpotifyAlbumDetails;
-  albumArtists?: ArtistParamsResult[];
-  tracks?: TrackParamsResult[];
+  spotifyRelease?: SuggestedRelease;
 };
 export const getReleaseParams = async (spotifyAlbumId: string): Promise<ReleaseParamsResult> => {
   const existingRelease = await getRelease(spotifyAlbumId);
@@ -25,34 +27,32 @@ export const getReleaseParams = async (spotifyAlbumId: string): Promise<ReleaseP
 
   const albumDetails = await getAlbumDetails(spotifyAlbumId);
 
+  if (!albumDetails) {
+    return { isRegistered: false, spotifyRelease: undefined };
+  }
+
   return {
     isRegistered: false,
-    spotifyRelease: albumDetails,
-    albumArtists: await Promise.all(albumDetails?.albumArtists.map((artist) => getArtistParams(artist.id)) || []),
-    tracks: await Promise.all(albumDetails?.tracks.map((track) => getTrackParams(track.id)) || [])
+    spotifyRelease: {
+      spotifyAlbumId: albumDetails.spotifyAlbumId,
+      name: albumDetails.name,
+      releaseType: albumDetails.releaseType,
+      albumArtists: albumDetails.albumArtists.map((artist) => ({ spotifyArtistId: artist.id, name: artist.name }))
+    }
   };
 };
 
-type ArtistParamsResult = {
-  isRegistered: boolean;
-  existingArtist?: Artist;
-  spotifyArtist?: string;
+type SuggestedTrack = {
+  spotifyTrackId: string;
+  name: string;
+  artists: SuggestedArtist[];
 };
-const getArtistParams = async (spotifyArtistId: string): Promise<ArtistParamsResult> => {
-  const existingArtist = await getArtist(spotifyArtistId);
-  if (existingArtist) {
-    return { isRegistered: true, existingArtist };
-  }
-  return { isRegistered: false, spotifyArtist: await getArtistDetails(spotifyArtistId) };
-};
-
 type TrackParamsResult = {
   isRegistered: boolean;
   existingTrack?: Track;
-  spotifyTrack?: SpotifyTrackDetails;
-  artists?: ArtistParamsResult[];
+  spotifyTrack?: SuggestedTrack;
 };
-const getTrackParams = async (spotifyTrackId: string): Promise<TrackParamsResult> => {
+export const getTrackParams = async (spotifyTrackId: string): Promise<TrackParamsResult> => {
   const existingTrack = await getTrack(spotifyTrackId);
   if (existingTrack) {
     return { isRegistered: true, existingTrack };
@@ -60,9 +60,16 @@ const getTrackParams = async (spotifyTrackId: string): Promise<TrackParamsResult
 
   const trackDetails = await getTrackDetails(spotifyTrackId);
 
+  if (!trackDetails) {
+    return { isRegistered: false, spotifyTrack: undefined };
+  }
+
   return {
     isRegistered: false,
-    spotifyTrack: trackDetails,
-    artists: await Promise.all(trackDetails?.artists.map((artist) => getArtistParams(artist.id)) || [])
+    spotifyTrack: {
+      spotifyTrackId: trackDetails.spotifyTrackId,
+      name: trackDetails.title,
+      artists: trackDetails.artists.map((artist) => ({ spotifyArtistId: artist.id, name: artist.name }))
+    }
   };
 };

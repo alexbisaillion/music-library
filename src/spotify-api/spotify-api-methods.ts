@@ -83,13 +83,16 @@ export const getAlbumDetails = async (spotifyAlbumId: string): Promise<SpotifyAl
   };
 };
 
-// Right now, only the artist name is needed.
-export const getArtistDetails = async (spotifyArtistId: string): Promise<string | undefined> => {
+export type SpotifyArtistDetails = {
+  spotifyArtistId: string;
+  name: string;
+};
+export const getArtistDetails = async (spotifyArtistId: string): Promise<SpotifyArtistDetails | undefined> => {
   const response = await makeSpotifyRequest(() => spotifyApiWrapper.getArtist(spotifyArtistId));
 
   if (response.statusCode !== 200) {
     return undefined;
   }
 
-  return response.body.name;
+  return { spotifyArtistId: response.body.id, name: response.body.name };
 };

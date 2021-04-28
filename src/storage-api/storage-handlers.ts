@@ -1,10 +1,10 @@
 import { Response, Request } from 'express';
 import { isNilOrEmpty } from '../helpers/generic-helpers';
 import { sendError, ErrorCode, sendSuccessContent, SuccessCode } from '../helpers/routing';
-import { getAlbumTrackIds, getRecentPlays } from '../spotify-api/spotify-api-methods';
+import { getAlbumDetails, getAlbumTrackIds, getRecentPlays } from '../spotify-api/spotify-api-methods';
 import { getOrCreateTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
 import { Play } from '../models/play-model';
-import { getReleaseParams } from './storage-builders';
+import { getReleaseParams, getTrackParams } from './storage-builders';
 
 export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -72,5 +72,15 @@ export const handleGetAlbumInfo = async (req: Request, res: Response): Promise<v
     return;
   }
 
-  sendSuccessContent(res, SuccessCode.OK, await getReleaseParams(spotifyAlbumId));
+  const spotifyAlbum = await getAlbumDetails(spotifyAlbumId);
+
+  if (!spotifyAlbum) {
+    sendError(res, ErrorCode.BadRequest, 'The provided ID is not a valid album on Spotify.');
+    return;
+  }
+
+  const release = await getReleaseParams(spotifyAlbumId);
+  const tracks = await Promise.all(spotifyAlbum.tracks.map((track) => getTrackParams(track.id)));
+
+  sendSuccessContent(res, SuccessCode.OK, { release, tracks });
 };

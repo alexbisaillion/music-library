@@ -17,7 +17,7 @@ export const registerPlay = async (track: Track, timestamp: number): Promise<Pla
   return PlayModel.create({ track: track._id, timestamp: timestamp });
 };
 
-const getTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
+export const getTrack = async (spotifyTrackId: string): Promise<Track | undefined> => {
   const spotifyTrack = await SpotifyTrackModel.findOne({ spotifyId: spotifyTrackId });
   if (spotifyTrack) {
     return (await spotifyTrack.populate('track').execPopulate()).track as Track;
@@ -60,7 +60,7 @@ export const getOrCreateTrack = async (spotifyTrackId: string): Promise<Track | 
   return trackDocument;
 };
 
-const getArtist = async (spotifyArtistId: string): Promise<Artist | undefined> => {
+export const getArtist = async (spotifyArtistId: string): Promise<Artist | undefined> => {
   const spotifyArtist = await SpotifyArtistModel.findOne({ spotifyId: spotifyArtistId });
   if (spotifyArtist) {
     return (await spotifyArtist.populate('artist').execPopulate()).artist as Artist;

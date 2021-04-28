@@ -20,7 +20,7 @@ export const getRecentPlays = async (): Promise<RawPlay[] | undefined> => {
   }));
 };
 
-type SpotifyTrackDetails = {
+export type SpotifyTrackDetails = {
   spotifyTrackId: string;
   title: string;
   artists: SpotifyApi.ArtistObjectSimplified[];
@@ -58,4 +58,38 @@ export const getAlbumTrackIds = async (spotifyAlbumId: string): Promise<string[]
   } while (offset > 0);
 
   return trackIds;
+};
+
+export type SpotifyAlbumDetails = {
+  spotifyAlbumId: string;
+  name: string;
+  tracks: SpotifyApi.TrackObjectSimplified[];
+  albumArtists: SpotifyApi.ArtistObjectSimplified[];
+  releaseType: 'album' | 'single' | 'compilation';
+};
+export const getAlbumDetails = async (spotifyAlbumId: string): Promise<SpotifyAlbumDetails | undefined> => {
+  const response = await makeSpotifyRequest(() => spotifyApiWrapper.getAlbum(spotifyAlbumId));
+
+  if (response.statusCode !== 200) {
+    return undefined;
+  }
+
+  return {
+    spotifyAlbumId: response.body.id,
+    name: response.body.name,
+    tracks: response.body.tracks.items,
+    albumArtists: response.body.artists,
+    releaseType: response.body.album_type
+  };
+};
+
+// Right now, only the artist name is needed.
+export const getArtistDetails = async (spotifyArtistId: string): Promise<string | undefined> => {
+  const response = await makeSpotifyRequest(() => spotifyApiWrapper.getArtist(spotifyArtistId));
+
+  if (response.statusCode !== 200) {
+    return undefined;
+  }
+
+  return response.body.name;
 };

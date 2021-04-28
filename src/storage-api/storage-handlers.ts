@@ -4,6 +4,7 @@ import { sendError, ErrorCode, sendSuccessContent, SuccessCode } from '../helper
 import { getAlbumTrackIds, getRecentPlays } from '../spotify-api/spotify-api-methods';
 import { getOrCreateTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
 import { Play } from '../models/play-model';
+import { getReleaseParams } from './storage-builders';
 
 export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -62,4 +63,14 @@ export const handleRegisterRelease = async (req: Request, res: Response): Promis
   }
 
   sendSuccessContent(res, SuccessCode.Created, release);
+};
+
+export const handleGetAlbumInfo = async (req: Request, res: Response): Promise<void> => {
+  const spotifyAlbumId = req.body.spotifyAlbumId;
+  if (!spotifyAlbumId) {
+    sendError(res, ErrorCode.BadRequest, 'Please provide an album ID.');
+    return;
+  }
+
+  sendSuccessContent(res, SuccessCode.OK, await getReleaseParams(spotifyAlbumId));
 };

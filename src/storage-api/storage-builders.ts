@@ -68,7 +68,7 @@ export const getTrackParams = async (spotifyTrackId: string): Promise<TrackParam
     isRegistered: false,
     spotifyTrack: {
       spotifyTrackId: trackDetails.spotifyTrackId,
-      name: trackDetails.title,
+      name: trackDetails.name,
       artists: trackDetails.artists.map((artist) => ({ spotifyArtistId: artist.id, name: artist.name }))
     }
   };

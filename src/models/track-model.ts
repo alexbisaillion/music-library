@@ -4,7 +4,7 @@ import { model, Schema, Document, Types } from 'mongoose';
 
 export interface Track extends Document {
   _id: Types.ObjectId;
-  title: string;
+  name: string;
   spotifyIds: string[];
   artists: Types.ObjectId[] | Artist[];
   primaryRelease: Types.ObjectId | Release;
@@ -14,7 +14,7 @@ export interface Track extends Document {
 }
 
 const TrackSchema = new Schema({
-  title: { type: String, required: true },
+  name: { type: String, required: true },
   spotifyIds: { type: [String] },
   artists: { type: [Schema.Types.ObjectId], ref: 'Artist', required: true },
   primaryRelease: { type: Schema.Types.ObjectId, ref: 'Release', required: true },

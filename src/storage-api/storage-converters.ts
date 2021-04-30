@@ -14,8 +14,8 @@ export const getScrobblePlayParams = async (track: Track, timestamp: number): Pr
   const albumArtists = release.artists as Artist[];
 
   return {
-    track: fullTrack.title,
-    album: release.title,
+    track: fullTrack.name,
+    album: release.name,
     artist: artists[0].name,
     albumArtist: formatAlbumArtists(albumArtists.map((artist) => artist.name)),
     timestamp

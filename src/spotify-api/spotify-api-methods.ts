@@ -22,7 +22,7 @@ export const getRecentPlays = async (): Promise<RawPlay[] | undefined> => {
 
 export type SpotifyTrackDetails = {
   spotifyTrackId: string;
-  title: string;
+  name: string;
   artists: SpotifyApi.ArtistObjectSimplified[];
   album: SpotifyApi.AlbumObjectSimplified;
 };
@@ -35,7 +35,7 @@ export const getTrackDetails = async (spotifyTrackId: string): Promise<SpotifyTr
 
   return {
     spotifyTrackId: response.body.id,
-    title: response.body.name,
+    name: response.body.name,
     artists: response.body.artists,
     album: response.body.album
   };

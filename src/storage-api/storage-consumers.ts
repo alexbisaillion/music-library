@@ -42,7 +42,7 @@ export const getOrCreateTrack = async (spotifyTrackId: string): Promise<Track | 
   const release = await getOrCreateRelease(album);
 
   const trackDocument = await TrackModel.create({
-    title: details.title,
+    name: details.name,
     spotifyIds: [details.spotifyTrackId],
     artists: artistReferences.map((artistReference) => artistReference._id),
     primaryRelease: release._id,
@@ -106,7 +106,7 @@ const getOrCreateRelease = async (album: SpotifyApi.AlbumObjectSimplified): Prom
 
   // Create the new release document.
   const releaseDocument = await ReleaseModel.create({
-    title: album.name,
+    name: album.name,
     spotifyIds: [album.id],
     releaseType: convertAlbumType(album.album_type),
     artists: artistReferences.map((artistReference) => artistReference._id),

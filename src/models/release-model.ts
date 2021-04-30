@@ -13,7 +13,7 @@ export enum ReleaseType {
 
 export interface Release extends Document {
   _id: Types.ObjectId;
-  title: string;
+  name: string;
   spotifyIds: string[];
   releaseType: ReleaseType;
   artists: Types.ObjectId[] | Artist[];
@@ -23,7 +23,7 @@ export interface Release extends Document {
 }
 
 const ReleaseSchema = new Schema({
-  title: { type: String, required: true },
+  name: { type: String, required: true },
   spotifyIds: { type: [String] },
   releaseType: { type: String, enum: ReleaseType, required: true },
   artists: { type: [Schema.Types.ObjectId], ref: 'Artist', required: true },

@@ -5,6 +5,9 @@ import { getAlbumDetails, getAlbumTrackIds, getRecentPlays } from '../spotify-ap
 import { getOrCreateTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
 import { Play } from '../models/play-model';
 import { getReleaseParams, getTrackParams } from './storage-builders';
+import { createArtist, createRelease, createTrack } from './storage-creators';
+import { ReleaseModel, ReleaseType } from '../models/release-model';
+import { ArtistModel } from '../models/artist-model';
 
 export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -83,4 +86,84 @@ export const handleGetAlbumInfo = async (req: Request, res: Response): Promise<v
   const tracks = await Promise.all(spotifyAlbum.tracks.map((track) => getTrackParams(track.id)));
 
   sendSuccessContent(res, SuccessCode.OK, { release, tracks });
+};
+
+export const handleCreateArtist = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { spotifyArtistId, name } = req.body;
+    if (!spotifyArtistId || spotifyArtistId.length < 1) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid spotify artist ID.');
+      return;
+    }
+
+    if (!name || name.length < 1) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid name.');
+    }
+
+    const newArtist = await createArtist({ spotifyArtistId, name });
+
+    sendSuccessContent(res, SuccessCode.OK, newArtist);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
+};
+
+export const handleCreateRelease = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, spotifyAlbumId, releaseType, artistIds } = req.body;
+    if (!spotifyAlbumId || spotifyAlbumId.length < 1) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid spotify album ID.');
+      return;
+    }
+
+    if (!name || name.length < 1) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid name.');
+    }
+
+    if (!Object.values(ReleaseType).includes(releaseType)) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid release type.');
+    }
+
+    if (isNilOrEmpty(artistIds)) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply at least 1 artist ID.');
+    }
+
+    if (!artistIds.some(async (artistId: string) => await ArtistModel.exists({ _id: artistId }))) {
+      sendError(res, ErrorCode.BadRequest, 'An invalid artist ID was supplied.');
+    }
+
+    const newRelease = await createRelease({ name, spotifyAlbumId, releaseType, artistIds });
+
+    sendSuccessContent(res, SuccessCode.OK, newRelease);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
+};
+
+export const handleCreateTrack = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, spotifyTrackId, artistIds, releaseId } = req.body;
+    if (!spotifyTrackId || spotifyTrackId.length < 1) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid spotify track ID.');
+      return;
+    }
+
+    if (!name || name.length < 1) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply a valid name.');
+    }
+
+    if (isNilOrEmpty(artistIds)) {
+      sendError(res, ErrorCode.BadRequest, 'Please supply at least 1 artist ID.');
+    }
+
+    if (!ReleaseModel.exists({ _id: releaseId })) {
+      sendError(res, ErrorCode.BadRequest, 'An invalid release ID was supplied.');
+    }
+
+    const newTrack = await createTrack({ name, spotifyTrackId, artistIds, releaseId });
+
+    sendSuccessContent(res, SuccessCode.OK, newTrack);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
 };

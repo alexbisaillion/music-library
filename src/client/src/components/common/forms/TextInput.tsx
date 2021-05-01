@@ -1,7 +1,8 @@
-import { InputAdornment, TextField, Tooltip } from '@material-ui/core';
+import { IconButton, InputAdornment, TextField, Tooltip } from '@material-ui/core';
 
 type TextInputProps = {
   icon?: JSX.Element;
+  action?: () => void;
   value: string;
   setValue: (newValue: string) => void;
   label: string;
@@ -9,9 +10,23 @@ type TextInputProps = {
   id?: string;
 };
 export const TextInput = (props: TextInputProps) => {
-  const { icon, value, setValue, label, isExternal, id } = props;
+  const { icon, action, value, setValue, label, isExternal, id } = props;
 
-  const startIcon = icon ? { startAdornment: <InputAdornment position="start">{icon}</InputAdornment> } : undefined;
+  const renderAdornment = () => {
+    if (!icon) {
+      return undefined;
+    }
+    if (!action) {
+      return { startAdornment: <InputAdornment position="start">{icon}</InputAdornment> };
+    }
+    return {
+      endAdornment: (
+        <InputAdornment position="end">
+          <IconButton onClick={action}>{icon}</IconButton>
+        </InputAdornment>
+      )
+    };
+  };
 
   const input = (
     <TextField
@@ -20,7 +35,7 @@ export const TextInput = (props: TextInputProps) => {
       onChange={(e) => setValue(e.target.value)}
       color={isExternal ? 'secondary' : 'primary'}
       variant="filled"
-      InputProps={startIcon}
+      InputProps={renderAdornment()}
     />
   );
 

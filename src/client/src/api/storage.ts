@@ -1,32 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
+import { Artist } from './types';
 
 const routePrefix = '/storage';
 
-type ExistingArtist = {
-  _id: string;
-  name: string;
-};
-type SuggestedArtist = {
-  spotifyArtistId: string;
-  name: string;
-};
-type ArtistParamsResult =
-  | {
-      isRegistered: true;
-      existingArtist: ExistingArtist;
-      spotifyArtist?: never;
-    }
-  | {
-      isRegistered: false;
-      existingArtist?: never;
-      spotifyArtist: SuggestedArtist;
-    };
+type ExistingArtist = { _id: string; name: string };
+type SuggestedArtist = { spotifyArtistId: string; name: string };
+export type ArtistParamsResult =
+  | { isRegistered: true; existingArtist: ExistingArtist; spotifyArtist?: never }
+  | { isRegistered: false; existingArtist?: never; spotifyArtist: SuggestedArtist };
 
-type ExistingRelease = {
-  _id: string;
-  name: string;
-  albumArtists: ExistingArtist[];
-};
+type ExistingRelease = { _id: string; name: string; albumArtists: ExistingArtist[] };
 type SuggestedRelease = {
   spotifyAlbumId: string;
   name: string;
@@ -34,38 +17,14 @@ type SuggestedRelease = {
   albumArtists: ArtistParamsResult[];
 };
 export type ReleaseParamsResult =
-  | {
-      isRegistered: true;
-      existingRelease: ExistingRelease;
-      spotifyRelease?: never;
-    }
-  | {
-      isRegistered: false;
-      existingRelease?: never;
-      spotifyRelease: SuggestedRelease;
-    };
+  | { isRegistered: true; existingRelease: ExistingRelease; spotifyRelease?: never }
+  | { isRegistered: false; existingRelease?: never; spotifyRelease: SuggestedRelease };
 
-type ExistingTrack = {
-  _id: string;
-  name: string;
-  artists: ExistingArtist[];
-};
-type SuggestedTrack = {
-  spotifyTrackId: string;
-  name: string;
-  artists: ArtistParamsResult[];
-};
-type TrackParamsResult =
-  | {
-      isRegistered: true;
-      existingTrack: ExistingTrack;
-      spotifyTrack?: never;
-    }
-  | {
-      isRegistered: false;
-      existingTrack?: never;
-      spotifyTrack: SuggestedTrack;
-    };
+type ExistingTrack = { _id: string; name: string; artists: ExistingArtist[] };
+type SuggestedTrack = { spotifyTrackId: string; name: string; artists: ArtistParamsResult[] };
+export type TrackParamsResult =
+  | { isRegistered: true; existingTrack: ExistingTrack; spotifyTrack?: never }
+  | { isRegistered: false; existingTrack?: never; spotifyTrack: SuggestedTrack };
 
 export type AlbumParamsResponse = {
   release: ReleaseParamsResult;
@@ -75,5 +34,10 @@ export const getAlbumParams = async (spotifyAlbumId: string): Promise<AlbumParam
   const response: AxiosResponse<AlbumParamsResponse> = await axios.post(routePrefix + '/getAlbumInfo', {
     spotifyAlbumId
   });
+  return response.data;
+};
+
+export const createArtist = async (spotifyArtistId: string, name: string): Promise<Artist> => {
+  const response: AxiosResponse<Artist> = await axios.post(routePrefix + '/createArtist', { spotifyArtistId, name });
   return response.data;
 };

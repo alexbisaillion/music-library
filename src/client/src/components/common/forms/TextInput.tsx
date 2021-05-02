@@ -8,9 +8,10 @@ type TextInputProps = {
   label: string;
   isExternal: boolean;
   id?: string;
+  disabled?: boolean;
 };
 export const TextInput = (props: TextInputProps) => {
-  const { icon, action, value, setValue, label, isExternal, id } = props;
+  const { icon, action, value, setValue, label, isExternal, id, disabled } = props;
 
   const renderAdornment = () => {
     if (!icon) {
@@ -22,7 +23,9 @@ export const TextInput = (props: TextInputProps) => {
     return {
       endAdornment: (
         <InputAdornment position="end">
-          <IconButton onClick={action}>{icon}</IconButton>
+          <IconButton disabled={disabled} onClick={action}>
+            {icon}
+          </IconButton>
         </InputAdornment>
       )
     };
@@ -36,6 +39,7 @@ export const TextInput = (props: TextInputProps) => {
       color={isExternal ? 'secondary' : 'primary'}
       variant="filled"
       InputProps={renderAdornment()}
+      disabled={disabled}
     />
   );
 

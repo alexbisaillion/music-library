@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Artist } from './types';
+import { Artist, Release, ReleaseType } from './types';
 
 const routePrefix = '/storage';
 
@@ -39,5 +39,16 @@ export const getAlbumParams = async (spotifyAlbumId: string): Promise<AlbumParam
 
 export const createArtist = async (spotifyArtistId: string, name: string): Promise<Artist> => {
   const response: AxiosResponse<Artist> = await axios.post(routePrefix + '/createArtist', { spotifyArtistId, name });
+  return response.data;
+};
+
+type CreateReleaseParams = {
+  name: string;
+  spotifyAlbumId: string;
+  releaseType: ReleaseType;
+  artistIds: string[];
+};
+export const createRelease = async (params: CreateReleaseParams): Promise<Release> => {
+  const response: AxiosResponse<Release> = await axios.post(routePrefix + '/createRelease', params);
   return response.data;
 };

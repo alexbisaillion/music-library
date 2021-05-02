@@ -12,28 +12,31 @@ const RegisterArtistsContainer = styled.div`
   }
 `;
 
-type ReleaseInputProps = {
+type SelectReleaseArtistsProps = {
   artistParams: ArtistParamsResult[];
+  addArtist: (artistId: string) => void;
 };
-export const SelectAlbumArtists = (props: ReleaseInputProps) => {
-  const { artistParams } = props;
+export const SelectReleaseArtists = (props: SelectReleaseArtistsProps) => {
+  const { artistParams, addArtist } = props;
   return (
     <RegisterArtistsContainer>
       {artistParams.map((artist) => (
-        <SelectAlbumArtist
+        <SelectReleaseArtist
           key={artist.existingArtist ? artist.existingArtist._id : artist.spotifyArtist.spotifyArtistId}
           artistParams={artist}
+          addArtist={addArtist}
         />
       ))}
     </RegisterArtistsContainer>
   );
 };
 
-type SelectAlbumArtistProps = {
+type SelectReleaseArtistProps = {
   artistParams: ArtistParamsResult;
+  addArtist: (artistId: string) => void;
 };
-const SelectAlbumArtist = (props: SelectAlbumArtistProps) => {
-  const { artistParams } = props;
+const SelectReleaseArtist = (props: SelectReleaseArtistProps) => {
+  const { artistParams, addArtist } = props;
   const [newArtist, setNewArtist] = useState<Artist>();
 
   const sendCreateArtist = async () => {
@@ -42,6 +45,7 @@ const SelectAlbumArtist = (props: SelectAlbumArtistProps) => {
     }
 
     const newArtist = await createArtist(artistParams.spotifyArtist.spotifyArtistId, artistParams.spotifyArtist.name);
+    addArtist(newArtist._id);
     setNewArtist(newArtist);
   };
 

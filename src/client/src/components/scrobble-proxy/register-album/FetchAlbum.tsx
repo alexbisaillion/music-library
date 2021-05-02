@@ -11,10 +11,10 @@ const GetAlbumTracksContainer = styled.div`
   }
 `;
 
-type GetAlbumTracksProps = {
+type FetchAlbumProps = {
   setAlbumParams: (params: AlbumParamsResponse) => void;
 };
-export const GetAlbumTracks = (props: GetAlbumTracksProps) => {
+export const FetchAlbum = (props: FetchAlbumProps) => {
   const { setAlbumParams } = props;
 
   const [albumId, setAlbumId] = useState('');

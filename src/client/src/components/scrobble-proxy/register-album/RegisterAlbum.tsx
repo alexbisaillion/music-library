@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { AlbumParamsResponse } from '../../../api/storage';
 import { PageContainer } from '../../common/Page';
-import { GetAlbumTracks } from './GetAlbumTracks';
+import { FetchAlbum } from './FetchAlbum';
 import { ReleaseInput } from './ReleaseInput';
 
 const RegisterAlbumContainer = styled.div`
@@ -29,7 +29,7 @@ export const RegisterAlbum = () => {
   return (
     <PageContainer>
       <RegisterAlbumContainer>
-        <GetAlbumTracks setAlbumParams={setAlbumParams} />
+        <FetchAlbum setAlbumParams={setAlbumParams} />
         {renderReleaseInput()}
       </RegisterAlbumContainer>
     </PageContainer>

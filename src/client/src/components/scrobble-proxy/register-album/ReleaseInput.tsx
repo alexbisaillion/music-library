@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ReleaseParamsResult } from '../../../api/storage';
-import { SelectReleaseArtists } from './SelectReleaseArtists';
+import { SelectArtists } from './SelectReleaseArtists';
 import { SelectRelease } from './SelectRelease';
 
 type ReleaseInputProps = {
@@ -25,7 +25,7 @@ export const ReleaseInput = (props: ReleaseInputProps) => {
       return <></>;
     }
 
-    return <SelectReleaseArtists artistParams={releaseParams.spotifyRelease.albumArtists} addArtist={addArtist} />;
+    return <SelectArtists artistsParams={releaseParams.spotifyRelease.albumArtists} addArtist={addArtist} />;
   };
 
   const renderRegisterRelease = () => {

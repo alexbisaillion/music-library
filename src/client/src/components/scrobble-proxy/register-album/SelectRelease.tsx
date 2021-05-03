@@ -7,9 +7,10 @@ import { CreateIcon } from '../../icons/Material';
 type SelectReleaseProps = {
   releaseParams: ReleaseParamsResult;
   artistIds: string[];
+  setReleaseDocument: (release: Release) => void;
 };
 export const SelectRelease = (props: SelectReleaseProps) => {
-  const { releaseParams, artistIds } = props;
+  const { releaseParams, artistIds, setReleaseDocument } = props;
   const [newReleaseName, setNewReleaseName] = useState(releaseParams.spotifyRelease?.name);
   const [newRelease, setNewRelease] = useState<Release>();
 
@@ -25,6 +26,7 @@ export const SelectRelease = (props: SelectReleaseProps) => {
       spotifyAlbumId: releaseParams.spotifyRelease.spotifyAlbumId
     });
     setNewRelease(newRelease);
+    setReleaseDocument(newRelease);
   };
 
   if (releaseParams.isRegistered) {

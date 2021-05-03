@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ArtistParamsResult } from '../../../api/storage';
+import { Artist } from '../../../api/types';
 import { SelectArtist } from './SelectArtist';
 
 const RegisterArtistsContainer = styled.div`
@@ -11,7 +12,7 @@ const RegisterArtistsContainer = styled.div`
 
 type SelectArtistsProps = {
   artistsParams: ArtistParamsResult[];
-  addArtist: (artistId: string) => void;
+  addArtist: (artist: Artist) => void;
 };
 export const SelectArtists = (props: SelectArtistsProps) => {
   const { artistsParams: artistParams, addArtist } = props;

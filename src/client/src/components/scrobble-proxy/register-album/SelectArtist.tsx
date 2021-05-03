@@ -6,7 +6,7 @@ import { CreateIcon } from '../../icons/Material';
 
 type SelectArtistProps = {
   artistParams: ArtistParamsResult;
-  addArtist: (artistId: string) => void;
+  addArtist: (newArtist: Artist) => void;
 };
 export const SelectArtist = (props: SelectArtistProps) => {
   const { artistParams, addArtist } = props;
@@ -18,7 +18,7 @@ export const SelectArtist = (props: SelectArtistProps) => {
     }
 
     const newArtist = await createArtist(artistParams.spotifyArtist.spotifyArtistId, artistParams.spotifyArtist.name);
-    addArtist(newArtist._id);
+    addArtist(newArtist);
     setNewArtist(newArtist);
   };
 

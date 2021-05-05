@@ -167,3 +167,47 @@ export const handleCreateTrack = async (req: Request, res: Response): Promise<vo
     sendError(res, ErrorCode.InternalServerError, error);
   }
 };
+
+export const handleCreateManyTracks = async (req: Request, res: Response): Promise<void> => {
+  const { tracks } = req.body;
+
+  if (!tracks || tracks.length < 1) {
+    sendSuccessContent(res, SuccessCode.OK, []);
+    return;
+  }
+
+  const results = [];
+  for (const track of tracks) {
+    try {
+      const { name, spotifyTrackId, artistIds, releaseId } = track;
+
+      if (!spotifyTrackId || spotifyTrackId.length < 1) {
+        results.push({ success: false, error: 'Please supply a valid spotify track ID.' });
+        continue;
+      }
+
+      if (!name || name.length < 1) {
+        results.push({ success: false, error: 'Please supply a valid name.' });
+        continue;
+      }
+
+      if (isNilOrEmpty(artistIds)) {
+        results.push({ success: false, error: 'Please supply at least 1 artist ID.' });
+        continue;
+      }
+
+      if (!ReleaseModel.exists({ _id: releaseId })) {
+        results.push({ success: false, error: 'An invalid release ID was supplied.' });
+        continue;
+      }
+
+      const newTrack = await createTrack({ name, spotifyTrackId, artistIds, releaseId });
+
+      results.push({ success: true, track: newTrack });
+    } catch (error) {
+      results.push({ success: false, error: error });
+    }
+  }
+
+  sendSuccessContent(res, SuccessCode.OK, results);
+};

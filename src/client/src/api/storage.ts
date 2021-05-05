@@ -53,7 +53,7 @@ export const createRelease = async (params: CreateReleaseParams): Promise<Releas
   return response.data;
 };
 
-type CreateTrackParams = {
+export type CreateTrackParams = {
   name: string;
   spotifyTrackId: string;
   artistIds: string[];
@@ -61,5 +61,15 @@ type CreateTrackParams = {
 };
 export const createTrack = async (params: CreateTrackParams): Promise<Track> => {
   const response: AxiosResponse<Track> = await axios.post(routePrefix + '/createTrack', params);
+  return response.data;
+};
+
+export type CreateTrackResponse =
+  | { success: true; track: Track; error?: never }
+  | { success: false; track?: never; error: string };
+export const createManyTracks = async (params: CreateTrackParams[]): Promise<CreateTrackResponse[]> => {
+  const response: AxiosResponse<CreateTrackResponse[]> = await axios.post(routePrefix + '/createManyTracks', {
+    tracks: params
+  });
   return response.data;
 };

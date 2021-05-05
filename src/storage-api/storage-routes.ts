@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   handleCreateArtist,
+  handleCreateManyTracks,
   handleCreateRelease,
   handleCreateTrack,
   handleGetAlbumInfo,
@@ -17,3 +18,4 @@ storageRouter.post(routeURL('getAlbumInfo'), handleGetAlbumInfo);
 storageRouter.post(routeURL('createArtist'), handleCreateArtist);
 storageRouter.post(routeURL('createRelease'), handleCreateRelease);
 storageRouter.post(routeURL('createTrack'), handleCreateTrack);
+storageRouter.post(routeURL('createManyTracks'), handleCreateManyTracks);

@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { TrackParamsResult } from '../../../api/storage';
+import { createManyTracks, TrackParamsResult, CreateTrackParams } from '../../../api/storage';
 import { Artist, Release } from '../../../api/types';
 import { TextInput } from '../../common/forms/TextInput';
 import { StripIcon } from '../../icons/Material';
 import { TrackInput } from './TrackInput';
 import produce from 'immer';
+import { TextButton } from '../../common/forms/TextButton';
 
 type TrackInputsProps = {
   tracksParams: TrackParamsResult[];
   release: Release;
 };
 export const TrackInputs = (props: TrackInputsProps) => {
-  const { tracksParams } = props;
+  const { tracksParams, release } = props;
   const [tracks, setTracks] = useState<TrackParamsResult[]>(tracksParams);
   const [commonTerm, setCommonTerm] = useState('');
 
@@ -58,6 +59,33 @@ export const TrackInputs = (props: TrackInputsProps) => {
     );
   };
 
+  const isCreateTracksDisabled = () => {
+    return tracks.some(
+      (track) => !track.isRegistered && track.spotifyTrack.artists.some((artist) => !artist.isRegistered)
+    );
+  };
+
+  const createTracks = async () => {
+    await createManyTracks(
+      tracks.reduce((tracks, currentTrack) => {
+        if (!currentTrack.isRegistered) {
+          tracks.push({
+            spotifyTrackId: currentTrack.spotifyTrack.spotifyTrackId,
+            artistIds: currentTrack.spotifyTrack.artists.reduce((artists, currentArtist) => {
+              if (currentArtist.isRegistered) {
+                artists.push(currentArtist.existingArtist._id);
+              }
+              return artists;
+            }, [] as string[]),
+            name: currentTrack.spotifyTrack.name,
+            releaseId: release._id
+          });
+        }
+        return tracks;
+      }, [] as CreateTrackParams[])
+    );
+  };
+
   return (
     <>
       <TextInput
@@ -68,6 +96,7 @@ export const TrackInputs = (props: TrackInputsProps) => {
         setValue={setCommonTerm}
         value={commonTerm}
       />
+      <TextButton label="Save Tracks" disabled={isCreateTracksDisabled()} onClick={createTracks} />
       {tracks.map((track) => (
         <TrackInput
           key={track.isRegistered ? track.existingTrack._id : track.spotifyTrack.spotifyTrackId}

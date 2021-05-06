@@ -4,7 +4,7 @@
   "description": "Client-server web application for personal side projects",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cd src/client && npm install && npm run build",
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "start": "node dist/js/app.js",
     "lint": "eslint . --ext .ts",

@@ -11,6 +11,7 @@ export interface Track extends Document {
   secondaryReleases: Types.ObjectId[] | Release[];
   plays: number[];
   rating?: number;
+  dateAdded: number;
 }
 
 const TrackSchema = new Schema({
@@ -20,7 +21,8 @@ const TrackSchema = new Schema({
   primaryRelease: { type: Schema.Types.ObjectId, ref: 'Release', required: true },
   secondaryReleases: { type: [Schema.Types.ObjectId], ref: 'Release', required: true },
   plays: { type: [Number], required: true },
-  rating: { type: Number }
+  rating: { type: Number },
+  dateAdded: { type: Date, default: Date.now }
 });
 
 export const TrackModel = model<Track>('Track', TrackSchema);

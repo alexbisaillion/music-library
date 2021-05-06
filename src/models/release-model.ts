@@ -20,6 +20,7 @@ export interface Release extends Document {
   tracks: Types.ObjectId[] | Track[];
   rating?: number;
   releaseDate?: number;
+  dateAdded: number;
 }
 
 const ReleaseSchema = new Schema({
@@ -29,7 +30,8 @@ const ReleaseSchema = new Schema({
   artists: { type: [Schema.Types.ObjectId], ref: 'Artist', required: true },
   tracks: { type: [Schema.Types.ObjectId], ref: 'Track', required: true },
   rating: { type: Number },
-  releaseDate: { type: Number }
+  releaseDate: { type: Number },
+  dateAdded: { type: Date, default: Date.now }
 });
 
 export const ReleaseModel = model<Release>('Release', ReleaseSchema);

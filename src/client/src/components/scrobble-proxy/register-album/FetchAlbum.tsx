@@ -21,7 +21,10 @@ export const FetchAlbum = (props: FetchAlbumProps) => {
   const [isFetched, setIsFetched] = useState(false);
 
   const fetchAlbumParams = async () => {
-    const albumParams = await getAlbumParams(albumId);
+    const urlStripped = albumId.replace('https://open.spotify.com/album/', '');
+    const suffixIndex = urlStripped.indexOf('?si=');
+    const strippedAlbumId = urlStripped.substring(0, suffixIndex > -1 ? suffixIndex : undefined);
+    const albumParams = await getAlbumParams(strippedAlbumId);
     setIsFetched(true);
     setAlbumParams(albumParams);
   };

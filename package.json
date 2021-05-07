@@ -7,6 +7,7 @@
     "build": "tsc && cd src/client && npm install && npm run build",
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "start": "node dist/js/app.js",
+    "sandbox": "node dist/js/sandbox.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc src --write",
     "test": "jest"
@@ -15,6 +16,7 @@
   "dependencies": {
     "connect-mongo": "^4.4.1",
     "cors": "^2.8.5",
+    "dotenv": "^9.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mongoose": "^5.12.4",

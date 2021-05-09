@@ -15,6 +15,7 @@
       {
         "endOfLine": "auto"
       }
-    ]
+    ],
+    "no-constant-condition": "off"
   }
 }

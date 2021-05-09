@@ -7,6 +7,7 @@
     "build": "tsc && cd src/client && npm install && npm run build",
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "start": "node dist/js/app.js",
+    "worker": "node dist/js/worker.js",
     "sandbox": "node dist/js/sandbox.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc src --write",

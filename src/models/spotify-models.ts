@@ -1,6 +1,5 @@
 import { model, Schema, Document, Types } from 'mongoose';
 import { Artist } from './artist-model';
-import { Release } from './release-model';
 import { Track } from './track-model';
 
 export interface SpotifyTrack extends Document {
@@ -15,19 +14,6 @@ const SpotifyTrackSchema = new Schema({
 });
 
 export const SpotifyTrackModel = model<SpotifyTrack>('SpotifyTrack', SpotifyTrackSchema);
-
-export interface SpotifyAlbum extends Document {
-  _id: Types.ObjectId;
-  spotifyId: string;
-  album: Types.ObjectId | Release;
-}
-
-const SpotifyAlbumSchema = new Schema({
-  spotifyId: { type: String, required: true, unique: true },
-  album: { type: Schema.Types.ObjectId, ref: 'Release', required: true }
-});
-
-export const SpotifyAlbumModel = model<SpotifyAlbum>('SpotifyAlbum', SpotifyAlbumSchema);
 
 export interface SpotifyArtist extends Document {
   _id: Types.ObjectId;

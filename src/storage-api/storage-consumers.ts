@@ -1,10 +1,10 @@
 import { scrobblePlay } from '../lastfm-api/lastfm-api-methods';
 import { Artist } from '../models/artist-model';
 import { Play, PlayModel } from '../models/play-model';
-import { Release } from '../models/release-model';
+import { Release, ReleaseModel } from '../models/release-model';
 import { Track } from '../models/track-model';
 import { getTrackDetails } from '../spotify-api/spotify-api-methods';
-import { SpotifyTrackModel, SpotifyAlbumModel, SpotifyArtistModel } from '../models/spotify-models';
+import { SpotifyTrackModel, SpotifyArtistModel } from '../models/spotify-models';
 import { getScrobblePlayParams, convertAlbumType } from './storage-converters';
 import { createArtist, createRelease, createTrack } from './storage-creators';
 
@@ -44,7 +44,7 @@ export const getOrCreateTrack = async (spotifyTrackId: string): Promise<Track | 
 
   return createTrack({
     name,
-    spotifyTrackId,
+    spotifyTrackIds: [spotifyTrackId],
     artistIds: artistReferences.map((artistReference) => artistReference._id),
     releaseId: release._id
   });
@@ -58,7 +58,7 @@ export const getArtist = async (spotifyArtistId: string): Promise<Artist | undef
   return undefined;
 };
 
-const getOrCreateArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Promise<Artist> => {
+export const getOrCreateArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Promise<Artist> => {
   const spotifyArtist = await getArtist(artist.id);
   if (spotifyArtist) {
     return spotifyArtist;
@@ -68,13 +68,13 @@ const getOrCreateArtist = async (artist: SpotifyApi.ArtistObjectSimplified): Pro
 };
 
 export const getRelease = async (spotifyAlbumId: string): Promise<Release | undefined> => {
-  const spotifyAlbum = await SpotifyAlbumModel.findOne({ spotifyId: spotifyAlbumId });
-  if (spotifyAlbum) {
-    return (await spotifyAlbum.populate('album').execPopulate()).album as Release;
+  const existingAlbum = await ReleaseModel.findOne({ spotifyIds: spotifyAlbumId });
+  if (existingAlbum) {
+    return existingAlbum;
   }
   return undefined;
 };
-const getOrCreateRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promise<Release> => {
+export const getOrCreateRelease = async (album: SpotifyApi.AlbumObjectSimplified): Promise<Release> => {
   const spotifyAlbum = await getRelease(album.id);
   if (spotifyAlbum) {
     return spotifyAlbum;
@@ -86,7 +86,7 @@ const getOrCreateRelease = async (album: SpotifyApi.AlbumObjectSimplified): Prom
   return createRelease({
     name: album.name,
     releaseType: convertAlbumType(album.album_type),
-    spotifyAlbumId: album.id,
+    spotifyAlbumIds: [album.id],
     artistIds: artistReferences.map((artistReference) => artistReference._id)
   });
 };

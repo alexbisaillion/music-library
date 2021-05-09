@@ -132,7 +132,7 @@ export const handleCreateRelease = async (req: Request, res: Response): Promise<
       sendError(res, ErrorCode.BadRequest, 'An invalid artist ID was supplied.');
     }
 
-    const newRelease = await createRelease({ name, spotifyAlbumId, releaseType, artistIds });
+    const newRelease = await createRelease({ name, spotifyAlbumIds: [spotifyAlbumId], releaseType, artistIds });
 
     sendSuccessContent(res, SuccessCode.OK, newRelease);
   } catch (error) {
@@ -160,7 +160,7 @@ export const handleCreateTrack = async (req: Request, res: Response): Promise<vo
       sendError(res, ErrorCode.BadRequest, 'An invalid release ID was supplied.');
     }
 
-    const newTrack = await createTrack({ name, spotifyTrackId, artistIds, releaseId });
+    const newTrack = await createTrack({ name, spotifyTrackIds: [spotifyTrackId], artistIds, releaseId });
 
     sendSuccessContent(res, SuccessCode.OK, newTrack);
   } catch (error) {
@@ -201,7 +201,7 @@ export const handleCreateManyTracks = async (req: Request, res: Response): Promi
         continue;
       }
 
-      const newTrack = await createTrack({ name, spotifyTrackId, artistIds, releaseId });
+      const newTrack = await createTrack({ name, spotifyTrackIds: [spotifyTrackId], artistIds, releaseId });
 
       results.push({ success: true, track: newTrack });
     } catch (error) {

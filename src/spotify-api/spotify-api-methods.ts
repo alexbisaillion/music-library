@@ -41,6 +41,21 @@ export const getTrackDetails = async (spotifyTrackId: string): Promise<SpotifyTr
   };
 };
 
+export const getTracksDetails = async (spotifyTrackIds: string[]): Promise<SpotifyTrackDetails[] | undefined> => {
+  const response = await makeSpotifyRequest(() => spotifyApiWrapper.getTracks(spotifyTrackIds));
+
+  if (response.statusCode !== 200) {
+    return undefined;
+  }
+
+  return response.body.tracks.map((track) => ({
+    spotifyTrackId: track.id,
+    name: track.name,
+    artists: track.artists,
+    album: track.album
+  }));
+};
+
 export const getAlbumTrackIds = async (spotifyAlbumId: string): Promise<string[] | undefined> => {
   let offset = 0;
   const trackIds: string[] = [];

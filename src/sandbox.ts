@@ -14,6 +14,7 @@ export const connectToMongo = async (): Promise<void> => {
   });
 };
 
-// import { processTracks } from './scripts/copyPreviousModel';
-// import tracks from './tracks.json';
-// processTracks(tracks, connectToMongo);
+// Import and call any methods here. Example:
+// import { createDocumentsFromArtistsList } from './scripts/copyPreviousModel';
+// import artistLists from './artist-lists.json';
+// createDocumentsFromArtistsList(artistLists, connectToMongo);

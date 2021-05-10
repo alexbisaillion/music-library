@@ -15,6 +15,17 @@ export const scrobblePlay = async (params: ScrobblePlayParams): Promise<boolean>
   return response.status === 200 && !body['error'] && body['scrobbles']['@attr']['accepted'] > 0;
 };
 
+export type BasePlayParams = {
+  track: string;
+  artist: string;
+  album: string;
+  albumArtist: string;
+};
+export const updateNowPlaying = async (params: BasePlayParams): Promise<boolean> => {
+  const response = await makeLastfmAuthenticatedRequest(LastfmMethod.UpdateNowPlaying, params);
+  return response.status === 200;
+};
+
 type RawTrack = {
   track: string;
   artist: string;

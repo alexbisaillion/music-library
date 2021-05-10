@@ -1,9 +1,14 @@
 import { Release, ReleaseType } from '../models/release-model';
 import { Track } from '../models/track-model';
-import { ScrobblePlayParams } from '../lastfm-api/lastfm-api-methods';
+import { ScrobblePlayParams, BasePlayParams } from '../lastfm-api/lastfm-api-methods';
 import { Artist } from '../models/artist-model';
 
 export const getScrobblePlayParams = async (track: Track, timestamp: number): Promise<ScrobblePlayParams> => {
+  const baseParams = await getBasePlayParams(track);
+  return { ...baseParams, timestamp };
+};
+
+export const getBasePlayParams = async (track: Track): Promise<BasePlayParams> => {
   const fullTrack = await track
     .populate('artists')
     .populate({ path: 'primaryRelease', populate: { path: 'artists' } })
@@ -17,8 +22,7 @@ export const getScrobblePlayParams = async (track: Track, timestamp: number): Pr
     track: fullTrack.name,
     album: release.name,
     artist: artists[0].name,
-    albumArtist: formatAlbumArtists(albumArtists.map((artist) => artist.name)),
-    timestamp
+    albumArtist: formatAlbumArtists(albumArtists.map((artist) => artist.name))
   };
 };
 

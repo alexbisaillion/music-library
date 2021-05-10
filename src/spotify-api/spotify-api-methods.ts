@@ -111,3 +111,37 @@ export const getArtistDetails = async (spotifyArtistId: string): Promise<Spotify
 
   return { spotifyArtistId: response.body.id, name: response.body.name };
 };
+
+type TrackObjectFull = SpotifyApi.TrackObjectFull;
+type EpisodeObjectFull = SpotifyApi.EpisodeObjectFull;
+const isTrackObject = (object: TrackObjectFull | EpisodeObjectFull): object is TrackObjectFull => 'album' in object;
+export const getCurrentlyPlayingTrack = async (): Promise<SpotifyTrackDetails | undefined> => {
+  const response = await makeSpotifyRequest(() => spotifyApiWrapper.getMyCurrentPlayingTrack());
+
+  if (response.statusCode !== 200) {
+    return undefined;
+  }
+
+  if (response.body.currently_playing_type !== 'track') {
+    return undefined;
+  }
+
+  if (!response.body.is_playing) {
+    return undefined;
+  }
+
+  if (!response.body.item) {
+    return undefined;
+  }
+
+  if (!isTrackObject(response.body.item)) {
+    return;
+  }
+
+  return {
+    album: response.body.item.album,
+    artists: response.body.item.artists,
+    name: response.body.item.name,
+    spotifyTrackId: response.body.item.id
+  };
+};

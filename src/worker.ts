@@ -3,9 +3,31 @@ config();
 
 import { sleep, SleepTime } from './helpers/generic-helpers';
 import { Play } from './models/play-model';
-import { getRecentPlays } from './spotify-api/spotify-api-methods';
-import { getOrCreateTrack, hasPlayBeenRegistered, registerPlay } from './storage-api/storage-consumers';
+import { getCurrentlyPlayingTrack, getRecentPlays } from './spotify-api/spotify-api-methods';
+import { getOrCreateTrack, getTrack, hasPlayBeenRegistered, registerPlay } from './storage-api/storage-consumers';
 import { connectToMongoose } from './helpers/connectToMongoose';
+import { updateNowPlaying } from './lastfm-api/lastfm-api-methods';
+import { getBasePlayParams } from './storage-api/storage-converters';
+
+const updateCurrentlyPlaying = async (): Promise<void> => {
+  const currentSpotifyTrack = await getCurrentlyPlayingTrack();
+  if (!currentSpotifyTrack) {
+    return;
+  }
+
+  const trackDocument = await getTrack(currentSpotifyTrack.spotifyTrackId);
+  if (trackDocument) {
+    const params = await getBasePlayParams(trackDocument);
+    await updateNowPlaying(params);
+  } else {
+    await updateNowPlaying({
+      album: currentSpotifyTrack.album.name,
+      albumArtist: currentSpotifyTrack.album.artists[0].name,
+      artist: currentSpotifyTrack.artists[0].name,
+      track: currentSpotifyTrack.name
+    });
+  }
+};
 
 const refreshPlays = async (): Promise<Play[] | undefined> => {
   const spotifyPlays = await getRecentPlays();
@@ -14,7 +36,6 @@ const refreshPlays = async (): Promise<Play[] | undefined> => {
     return;
   }
 
-  await connectToMongoose();
   const newPlays: Play[] = [];
   for (const play of spotifyPlays) {
     if (await hasPlayBeenRegistered(play.timestamp)) {
@@ -34,6 +55,8 @@ const refreshPlays = async (): Promise<Play[] | undefined> => {
 
 const listenToPlays = async () => {
   while (true) {
+    await connectToMongoose();
+    await updateCurrentlyPlaying();
     const plays = await refreshPlays();
     if (!plays) {
       console.log('Failed retrieving plays.');

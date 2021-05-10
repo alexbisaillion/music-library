@@ -3,7 +3,8 @@ export enum LastfmMethod {
   GetTopTracks = 'user.getTopTracks',
   GetTopAlbums = 'user.getTopAlbums',
   GetTopArtists = 'user.getTopArtists',
-  GetSession = 'auth.getSession'
+  GetSession = 'auth.getSession',
+  UpdateNowPlaying = 'track.updateNowPlaying'
 }
 
 export type LastfmPaginationParams = {

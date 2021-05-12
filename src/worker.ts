@@ -55,13 +55,18 @@ const refreshPlays = async (): Promise<Play[] | undefined> => {
 
 const listenToPlays = async () => {
   while (true) {
-    await connectToMongoose();
-    await updateCurrentlyPlaying();
-    const plays = await refreshPlays();
-    if (!plays) {
-      console.log('Failed retrieving plays.');
-    } else {
-      console.log(`Registered ${plays.length} plays.`);
+    try {
+      await connectToMongoose();
+      await updateCurrentlyPlaying();
+      const plays = await refreshPlays();
+      if (!plays) {
+        console.log('Failed retrieving plays.');
+      } else {
+        console.log(`Registered ${plays.length} plays.`);
+      }
+    } catch (error) {
+      console.log('Encountered an error.');
+      console.log(error);
     }
     console.log('Sleeping for 60000ms...');
     await sleep(SleepTime.Minute);

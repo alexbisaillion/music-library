@@ -8,6 +8,7 @@ import { getReleaseParams, getTrackParams } from './storage-builders';
 import { createArtist, createRelease, createTrack } from './storage-creators';
 import { ReleaseModel, ReleaseType } from '../models/release-model';
 import { ArtistModel } from '../models/artist-model';
+import { TrackModel } from '../models/track-model';
 
 export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -210,4 +211,22 @@ export const handleCreateManyTracks = async (req: Request, res: Response): Promi
   }
 
   sendSuccessContent(res, SuccessCode.OK, results);
+};
+
+export const handleGetTracks = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const tracks = await TrackModel.find({});
+    sendSuccessContent(res, SuccessCode.OK, tracks);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
+};
+
+export const handleGetReleases = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const releases = await ReleaseModel.find({});
+    sendSuccessContent(res, SuccessCode.OK, releases);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
 };

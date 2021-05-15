@@ -5,6 +5,8 @@ import {
   handleCreateRelease,
   handleCreateTrack,
   handleGetAlbumInfo,
+  handleGetReleases,
+  handleGetTracks,
   handleRefreshPlays,
   handleRegisterRelease
 } from './storage-handlers';
@@ -19,3 +21,5 @@ storageRouter.post(routeURL('createArtist'), handleCreateArtist);
 storageRouter.post(routeURL('createRelease'), handleCreateRelease);
 storageRouter.post(routeURL('createTrack'), handleCreateTrack);
 storageRouter.post(routeURL('createManyTracks'), handleCreateManyTracks);
+storageRouter.get(routeURL('getTracks'), handleGetTracks);
+storageRouter.get(routeURL('getReleases'), handleGetReleases);

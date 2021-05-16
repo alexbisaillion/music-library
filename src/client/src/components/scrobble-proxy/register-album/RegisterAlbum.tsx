@@ -35,6 +35,7 @@ export const RegisterAlbum = () => {
     setInitialAlbumParams(albumParams);
 
     if (albumParams.release.isRegistered) {
+      setReleaseDocument(albumParams.release.existingRelease);
       setRegisterAlbumState(RegisterAlbumState.CreateTracks);
       return;
     }
@@ -49,6 +50,7 @@ export const RegisterAlbum = () => {
     if (registeredAlbumArtistIds.length === albumParams.release.spotifyRelease.albumArtists.length) {
       setAlbumArtistIds(registeredAlbumArtistIds);
       setRegisterAlbumState(RegisterAlbumState.CreateRelease);
+      return;
     }
 
     setRegisterAlbumState(RegisterAlbumState.CreateAlbumArtists);

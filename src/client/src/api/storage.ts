@@ -9,7 +9,6 @@ export type ArtistParamsResult =
   | { isRegistered: true; existingArtist: ExistingArtist; spotifyArtist?: never }
   | { isRegistered: false; existingArtist?: never; spotifyArtist: SuggestedArtist };
 
-type ExistingRelease = { _id: string; name: string; albumArtists: ExistingArtist[] };
 type SuggestedRelease = {
   spotifyAlbumId: string;
   name: string;
@@ -17,13 +16,12 @@ type SuggestedRelease = {
   albumArtists: ArtistParamsResult[];
 };
 export type ReleaseParamsResult =
-  | { isRegistered: true; existingRelease: ExistingRelease; spotifyRelease?: never }
+  | { isRegistered: true; existingRelease: Release; spotifyRelease?: never }
   | { isRegistered: false; existingRelease?: never; spotifyRelease: SuggestedRelease };
 
-type ExistingTrack = { _id: string; name: string; artists: ExistingArtist[] };
 type SuggestedTrack = { spotifyTrackId: string; name: string; artists: ArtistParamsResult[] };
 export type TrackParamsResult =
-  | { isRegistered: true; existingTrack: ExistingTrack; spotifyTrack?: never }
+  | { isRegistered: true; existingTrack: Track; spotifyTrack?: never }
   | { isRegistered: false; existingTrack?: never; spotifyTrack: SuggestedTrack };
 
 export type AlbumParamsResponse = {

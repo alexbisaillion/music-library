@@ -22,7 +22,8 @@ export const getBasePlayParams = async (track: Track): Promise<BasePlayParams> =
     track: fullTrack.name,
     album: release.name,
     artist: artists[0].name,
-    albumArtist: formatAlbumArtists(albumArtists.map((artist) => artist.name))
+    albumArtist:
+      release.tracks.length > 1 ? formatAlbumArtists(albumArtists.map((artist) => artist.name)) : albumArtists[0].name
   };
 };
 

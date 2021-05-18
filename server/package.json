@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && cd src/client && npm install && npm run build",
+    "tsc": "tsc",
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "start": "node dist/js/app.js",
     "worker": "node dist/js/worker.js",

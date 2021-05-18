@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Client-server web application for personal side projects",
   "scripts": {
-    "heroku-prebuild": "cd client && npm install --production && npm run build && cd ../server && npm install && npm run tsc",
+    "heroku-prebuild": "cd client && npm install && npm install --only=dev && npm run build && cd ../server && npm install && npm run tsc",
     "start": "node server/dist/js/app.js",
     "worker": "node server/dist/js/worker.js"
   },

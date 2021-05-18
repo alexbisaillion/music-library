@@ -1,3 +1,6 @@
+import { config } from 'dotenv';
+config();
+
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
@@ -45,9 +48,9 @@ app.use(spotifyRouter);
 app.use(storageRouter);
 
 // Serve static files from the React app
-app.use(express.static(`${process.env.ROOT_DIR}/src/client/build`));
+app.use(express.static(`${process.env.ROOT_DIR}/client/build`));
 app.get('/*', (_req, res) => {
-  const url = path.join(`${process.env.ROOT_DIR}/src/client/build`, 'index.html');
+  const url = path.join(`${process.env.ROOT_DIR}/client/build`, 'index.html');
   res.sendFile(url);
 });
 

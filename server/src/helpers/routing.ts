@@ -1,5 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
-import { EnvironmentVariable, getEnvVar } from './environment-variables';
+import { Response } from 'express';
 
 export enum SuccessCode {
   OK = 200,

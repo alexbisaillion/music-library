@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+
 export enum EnvironmentVariable {
   ApplicationUsername = 'APPLICATION_USERNAME',
   ApplicationPassword = 'APPLICATION_PASSWORD',
@@ -17,6 +19,20 @@ export enum EnvironmentVariable {
   SpotifyRefreshToken = 'SPOTIFY_REFRESH_TOKEN'
 }
 
-export const getEnvVar = (variable: EnvironmentVariable): string => process.env[variable] || '';
-export const areAnyEnvVarsMissing = (): boolean =>
-  Object.values(EnvironmentVariable).some((variable) => getEnvVar(variable).length === 0);
+type EnvironmentVariables = { [key in EnvironmentVariable]: string };
+
+class Environment {
+  readonly variables: EnvironmentVariables;
+
+  constructor() {
+    config();
+    this.variables = Object.values(EnvironmentVariable).reduce((result, variable) => {
+      result[variable] = process.env[variable] || '';
+      return result;
+    }, {} as EnvironmentVariables);
+  }
+
+  areAnyVariablesMissing = (): boolean => Object.values(this.variables).some((variable) => variable.length <= 0);
+}
+
+export const environment = new Environment();

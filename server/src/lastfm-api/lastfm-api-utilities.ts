@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 import { stringify } from 'querystring';
 import fetch, { Response } from 'node-fetch';
-import { EnvironmentVariable, getEnvVar } from '../helpers/environment-variables';
+import { environment } from '../helpers/environment';
 import { LastfmMethod } from './lastfm-api-types';
 
 export const generateMethodSignature = (sharedSecret: string, methodParams: Record<string, string>): string => {
@@ -45,11 +45,11 @@ export const makeLastfmAuthenticatedRequest = (
   externalUser?: string
 ): Promise<Response> => {
   const urlParams: GenerateAuthenticatedUrlParams = {
-    apiKey: getEnvVar(EnvironmentVariable.LastfmApiKey),
-    session: externalUser ? '' : getEnvVar(EnvironmentVariable.LastfmSession), // TODO: Add retrieval of user session.
-    sharedSecret: getEnvVar(EnvironmentVariable.LastfmSharedSecret),
+    apiKey: environment.variables.LASTFM_API_KEY,
+    session: externalUser ? '' : environment.variables.LASTFM_SESSION, // TODO: Add retrieval of user session.
+    sharedSecret: environment.variables.LASTFM_SHARED_SECRET,
     method,
-    methodParams: { ...methodParams, user: externalUser || getEnvVar(EnvironmentVariable.LastfmUsername) }
+    methodParams: { ...methodParams, user: externalUser || environment.variables.LASTFM_USERNAME }
   };
   return fetch(generateAuthenticatedUrl(urlParams), { method: 'POST' });
 };
@@ -60,9 +60,9 @@ export const makeLastfmRequest = (
   externalUser?: string
 ): Promise<Response> => {
   const urlParams: GenerateUrlParams = {
-    apiKey: getEnvVar(EnvironmentVariable.LastfmApiKey),
+    apiKey: environment.variables.LASTFM_API_KEY,
     method,
-    methodParams: { ...methodParams, user: externalUser || getEnvVar(EnvironmentVariable.LastfmUsername) }
+    methodParams: { ...methodParams, user: externalUser || environment.variables.LASTFM_USERNAME }
   };
   return fetch(generateUrl(urlParams), { method: 'GET' });
 };

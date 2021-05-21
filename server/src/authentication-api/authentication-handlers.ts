@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from 'express';
-import { EnvironmentVariable, getEnvVar } from '../helpers/environment-variables';
+import { environment } from '../helpers/environment';
 import { sendError, ErrorCode, sendSuccess, SuccessCode, sendSuccessContent } from '../helpers/routing';
 
 export const handleLogIn = (req: Request, res: Response): void => {
@@ -16,8 +16,8 @@ export const handleLogIn = (req: Request, res: Response): void => {
 
     const { username, password } = req.body;
     const isCorrect =
-      username === getEnvVar(EnvironmentVariable.ApplicationUsername) &&
-      password === getEnvVar(EnvironmentVariable.ApplicationPassword);
+      username === environment.variables.APPLICATION_USERNAME &&
+      password === environment.variables.APPLICATION_PASSWORD;
 
     req.session.isLoggedIn = isCorrect;
     if (!isCorrect) {

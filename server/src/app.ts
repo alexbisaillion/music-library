@@ -9,7 +9,7 @@ import { authenticationRouter } from './authentication-api/authentication-routes
 import { lastfmRouter } from './lastfm-api/lastfm-routes';
 import { spotifyRouter } from './spotify-api/spotify-routes';
 import { storageRouter } from './storage-api/storage-routes';
-import { areAnyEnvVarsMissing } from './helpers/environment-variables';
+import { environment } from './helpers/environment';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { handleValidateAuthorized } from './authentication-api/authentication-handlers';
@@ -55,7 +55,7 @@ app.get('/*', (_req, res) => {
 });
 
 const startServer = async () => {
-  if (areAnyEnvVarsMissing()) {
+  if (environment.areAnyVariablesMissing()) {
     console.error(`Missing environment variables.`);
     return;
   }

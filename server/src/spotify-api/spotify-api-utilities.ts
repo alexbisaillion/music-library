@@ -1,10 +1,10 @@
 import SpotifyWebApi from 'spotify-web-api-node';
-import { EnvironmentVariable, getEnvVar } from '../helpers/environment-variables';
+import { environment } from '../helpers/environment';
 
 export const spotifyApiWrapper = new SpotifyWebApi({
-  clientId: getEnvVar(EnvironmentVariable.SpotifyClientId),
-  clientSecret: getEnvVar(EnvironmentVariable.SpotifyClientSecret),
-  refreshToken: getEnvVar(EnvironmentVariable.SpotifyRefreshToken)
+  clientId: environment.variables.SPOTIFY_CLIENT_ID,
+  clientSecret: environment.variables.SPOTIFY_CLIENT_SECRET,
+  refreshToken: environment.variables.SPOTIFY_REFRESH_TOKEN
 });
 
 export const refreshCredentials = async (): Promise<void> => {

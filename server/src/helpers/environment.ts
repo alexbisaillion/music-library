@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 
-export enum EnvironmentVariable {
+enum EnvironmentVariable {
   ApplicationUsername = 'APPLICATION_USERNAME',
   ApplicationPassword = 'APPLICATION_PASSWORD',
   JobUrl = 'JOB_URL',
@@ -33,6 +33,9 @@ class Environment {
   }
 
   areAnyVariablesMissing = (): boolean => Object.values(this.variables).some((variable) => variable.length <= 0);
+
+  mongoUri = (): string =>
+    `mongodb+srv://${this.variables.MONGO_USER}:${this.variables.MONGO_PASSWORD}@${this.variables.MONGO_CLUSTER}/${this.variables.MONGO_DB}?retryWrites=true&w=majority`;
 }
 
 export const environment = new Environment();

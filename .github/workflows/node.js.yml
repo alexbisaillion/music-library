@@ -10,9 +10,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-client:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
 
     strategy:
       matrix:
@@ -25,12 +28,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Build client
     - run: npm install
     - run: npm install --only=dev
     - run: npm run build
-    - name: Build server
-    - run: npm install
-    - run: npm install --only=dev
-    - run: npm run build
-    - run: npm test

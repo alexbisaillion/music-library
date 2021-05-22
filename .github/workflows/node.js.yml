@@ -25,11 +25,13 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - working-directory: client
+    - name: Build client
+      working-directory: client
     - run: npm install
     - run: npm install --only=dev
     - run: npm run build
-    - working-directory: server
+    - name: Build server
+      working-directory: server
     - run: npm install
     - run: npm install --only=dev
     - run: npm run build

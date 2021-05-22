@@ -4,12 +4,6 @@ export const isNonNil = <T>(t: T | undefined): t is T => {
   return !!t;
 };
 
-import fs from 'fs';
-
-export const writeToFile = <T>(obj: T, filename: string): void => {
-  fs.writeFileSync(filename, JSON.stringify(obj, null, 2));
-};
-
 export enum SleepTime {
   Second = 1000,
   Minute = 60000,

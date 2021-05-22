@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config();
 
 import { Types } from 'mongoose';
-import { writeToFile } from '../helpers/generic-helpers';
+import { writeToFile } from '../helpers/writeToFile';
 import { ReleaseType } from '../models/release-model';
 import { getTracksDetails, SpotifyTrackDetails } from '../spotify-api/spotify-api-methods';
 import { getArtist, getOrCreateArtist } from '../storage-api/storage-consumers';

@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import mongoose from 'mongoose';
 
 enum EnvironmentVariable {
   ApplicationUsername = 'APPLICATION_USERNAME',
@@ -23,6 +24,7 @@ type EnvironmentVariables = { [key in EnvironmentVariable]: string };
 
 class Environment {
   readonly variables: EnvironmentVariables;
+  readonly mongoUri: string;
 
   constructor() {
     config();
@@ -30,12 +32,19 @@ class Environment {
       result[variable] = process.env[variable] || '';
       return result;
     }, {} as EnvironmentVariables);
+    this.mongoUri = `mongodb+srv://${this.variables.MONGO_USER}:${this.variables.MONGO_PASSWORD}@${this.variables.MONGO_CLUSTER}/${this.variables.MONGO_DB}?retryWrites=true&w=majority`;
   }
 
   areAnyVariablesMissing = (): boolean => Object.values(this.variables).some((variable) => variable.length <= 0);
 
-  mongoUri = (): string =>
-    `mongodb+srv://${this.variables.MONGO_USER}:${this.variables.MONGO_PASSWORD}@${this.variables.MONGO_CLUSTER}/${this.variables.MONGO_DB}?retryWrites=true&w=majority`;
+  connectToMongoose = async (): Promise<void> => {
+    await mongoose.connect(this.mongoUri, {
+      useNewUrlParser: true,
+      useFindAndModify: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true
+    });
+  };
 }
 
 export const environment = new Environment();

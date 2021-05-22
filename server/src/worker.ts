@@ -5,9 +5,9 @@ import { sleep, SleepTime } from './helpers/generic-helpers';
 import { Play } from './models/play-model';
 import { getCurrentlyPlayingTrack, getRecentPlays } from './spotify-api/spotify-api-methods';
 import { getOrCreateTrack, getTrack, hasPlayBeenRegistered, registerPlay } from './storage-api/storage-consumers';
-import { connectToMongoose } from './helpers/connectToMongoose';
 import { updateNowPlaying } from './lastfm-api/lastfm-api-methods';
 import { getBasePlayParams } from './storage-api/storage-converters';
+import { environment } from './helpers/environment';
 
 const updateCurrentlyPlaying = async (): Promise<void> => {
   const currentSpotifyTrack = await getCurrentlyPlayingTrack();
@@ -56,7 +56,7 @@ const refreshPlays = async (): Promise<Play[] | undefined> => {
 const listenToPlays = async () => {
   while (true) {
     try {
-      await connectToMongoose();
+      await environment.connectToMongoose();
       await updateCurrentlyPlaying();
       const plays = await refreshPlays();
       if (!plays) {

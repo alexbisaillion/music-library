@@ -9,7 +9,6 @@ import { environment } from './helpers/environment';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { handleValidateAuthorized } from './authentication-api/authentication-handlers';
-import { connectToMongoose } from './helpers/connectToMongoose';
 
 // Declaration merging required by express-session
 declare module 'express-session' {
@@ -30,7 +29,7 @@ app.use(express.json());
 app.use(
   session({
     secret: environment.variables.SECRET || '',
-    store: MongoStore.create({ mongoUrl: environment.mongoUri(), collectionName: 'sessions' }),
+    store: MongoStore.create({ mongoUrl: environment.mongoUri, collectionName: 'sessions' }),
     resave: true,
     saveUninitialized: true
   })
@@ -55,7 +54,7 @@ const startServer = async () => {
     return;
   }
 
-  await connectToMongoose();
+  await environment.connectToMongoose();
 
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}.`));

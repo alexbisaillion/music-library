@@ -26,12 +26,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Build client
-      working-directory: client
     - run: npm install
     - run: npm install --only=dev
     - run: npm run build
     - name: Build server
-      working-directory: server
     - run: npm install
     - run: npm install --only=dev
     - run: npm run build

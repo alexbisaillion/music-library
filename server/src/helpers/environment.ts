@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
 
-enum EnvironmentVariable {
+export enum EnvironmentVariable {
   ApplicationUsername = 'APPLICATION_USERNAME',
   ApplicationPassword = 'APPLICATION_PASSWORD',
   JobUrl = 'JOB_URL',
@@ -20,25 +20,33 @@ enum EnvironmentVariable {
   SpotifyRefreshToken = 'SPOTIFY_REFRESH_TOKEN'
 }
 
-type EnvironmentVariables = { [key in EnvironmentVariable]: string };
+export type EnvironmentVariables = { [key in EnvironmentVariable]: string };
 
-class Environment {
-  readonly variables: EnvironmentVariables;
-  readonly mongoUri: string;
+export class EnvironmentWrapper {
+  private _variables: EnvironmentVariables;
+  private _mongoUri: string;
 
   constructor() {
     config();
-    this.variables = Object.values(EnvironmentVariable).reduce((result, variable) => {
+    this._variables = Object.values(EnvironmentVariable).reduce((result, variable) => {
       result[variable] = process.env[variable] || '';
       return result;
     }, {} as EnvironmentVariables);
-    this.mongoUri = `mongodb+srv://${this.variables.MONGO_USER}:${this.variables.MONGO_PASSWORD}@${this.variables.MONGO_CLUSTER}/${this.variables.MONGO_DB}?retryWrites=true&w=majority`;
+    this._mongoUri = `mongodb+srv://${this._variables.MONGO_USER}:${this._variables.MONGO_PASSWORD}@${this._variables.MONGO_CLUSTER}/${this._variables.MONGO_DB}?retryWrites=true&w=majority`;
   }
 
-  areAnyVariablesMissing = (): boolean => Object.values(this.variables).some((variable) => variable.length <= 0);
+  get variables(): EnvironmentVariables {
+    return this._variables;
+  }
+
+  get mongoUri(): string {
+    return this._mongoUri;
+  }
+
+  areAnyVariablesMissing = (): boolean => Object.values(this._variables).some((variable) => variable.length <= 0);
 
   connectToMongoose = async (): Promise<void> => {
-    await mongoose.connect(this.mongoUri, {
+    await mongoose.connect(this._mongoUri, {
       useNewUrlParser: true,
       useFindAndModify: true,
       useCreateIndex: true,
@@ -47,4 +55,4 @@ class Environment {
   };
 }
 
-export const environment = new Environment();
+export const environment = new EnvironmentWrapper();

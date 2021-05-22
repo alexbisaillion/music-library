@@ -1,8 +1,8 @@
-import { makeAuthenticatedRequest } from '../lastfm-api-utilities';
+import { makeLastfmAuthenticatedRequest } from '../lastfm-api-utilities';
 import fetch from 'node-fetch';
 import { createHash, Hash } from 'crypto';
 import { LastfmMethod } from '../lastfm-api-types';
-import * as EnvVars from '../../helpers/environment-variables';
+import { environment, EnvironmentVariables } from '../../helpers/environment';
 
 jest.mock('node-fetch', () => jest.fn());
 jest.mock('crypto', () => ({
@@ -10,7 +10,7 @@ jest.mock('crypto', () => ({
 }));
 
 describe('lastfm-api-utilities', () => {
-  describe('makeAuthenticatedRequest', () => {
+  describe('makeLastfmAuthenticatedRequest', () => {
     let nodeFetchSpy: jest.SpyInstance;
     let createHashSpy: jest.SpyInstance;
     const updateHashSpy = jest.fn();
@@ -34,16 +34,17 @@ describe('lastfm-api-utilities', () => {
       };
       createHashSpy = (createHash as jest.MockedFunction<typeof createHash>).mockReturnValue(hashObj as Hash);
 
-      jest
-        .spyOn(EnvVars, 'getEnvVar')
-        .mockReturnValueOnce(mockApiKey)
-        .mockReturnValueOnce(mockSession)
-        .mockReturnValueOnce(mockSharedSecret)
-        .mockReturnValueOnce(mockUsername);
+      const mockVariables: Partial<EnvironmentVariables> = {
+        LASTFM_API_KEY: mockApiKey,
+        LASTFM_SESSION: mockSession,
+        LASTFM_SHARED_SECRET: mockSharedSecret,
+        LASTFM_USERNAME: mockUsername
+      };
+      jest.spyOn(environment, 'variables', 'get').mockReturnValue(mockVariables as EnvironmentVariables);
     });
 
     it('generates the proper url and makes a request', async () => {
-      await makeAuthenticatedRequest(LastfmMethod.Scrobble, {
+      await makeLastfmAuthenticatedRequest(LastfmMethod.Scrobble, {
         album: 'After Hours',
         albumArtist: 'The Weeknd',
         artist: 'The Weeknd',
@@ -63,7 +64,7 @@ describe('lastfm-api-utilities', () => {
     });
 
     it('generates the proper url with special characters and makes a request', async () => {
-      await makeAuthenticatedRequest(LastfmMethod.Scrobble, {
+      await makeLastfmAuthenticatedRequest(LastfmMethod.Scrobble, {
         album: 'Tranquility Base Hotel & Casino', // '&' character
         albumArtist: 'Arctic Monkeys',
         artist: 'Arctic Monkeys',

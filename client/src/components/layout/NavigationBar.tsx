@@ -11,9 +11,10 @@ import {
   DialogActions,
   TextField,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
 import { useState } from "react";
 import { useAuthentication } from "../../context/authentication";
+import { useTheme } from "../../context/theme";
+import { DarkModeIcon, LightModeIcon, MenuToggleIcon } from "../icons/Material";
 
 const NavBarContainer = styled.div`
   flex-grow: 1;
@@ -29,6 +30,7 @@ type NavigationBarProps = {
 export const NavigationBar = (props: NavigationBarProps) => {
   const { menuOnClick } = props;
   const { isLoggedIn, attemptLogout } = useAuthentication();
+  const { useDarkMode, toggleDarkMode } = useTheme();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const renderLoginStatus = () => {
@@ -53,11 +55,14 @@ export const NavigationBar = (props: NavigationBarProps) => {
               color="inherit"
               onClick={() => menuOnClick()}
             >
-              <MenuIcon />
+              <MenuToggleIcon />
             </StyledIconButton>
             <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
               Alex Bisaillion
             </Typography>
+            <IconButton onClick={toggleDarkMode}>
+              {useDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
             {renderLoginStatus()}
           </Toolbar>
         </AppBar>

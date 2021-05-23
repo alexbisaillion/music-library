@@ -8,31 +8,9 @@ import {
   useState,
 } from "react";
 
-const DarkTheme = createMuiTheme({
-  palette: {
-    type: "dark",
-    primary: cyan,
-    secondary: pink,
-  },
-  props: {
-    MuiInput: { inputProps: { spellCheck: "false" } },
-  },
-});
-
-const LightTheme = createMuiTheme({
-  palette: {
-    type: "light",
-    primary: cyan,
-    secondary: pink,
-  },
-  props: {
-    MuiInput: { inputProps: { spellCheck: "false" } },
-  },
-});
-
 type ThemeContextProps = {
   useDarkMode: boolean;
-  setUseDarkMode: (useDarkMode: boolean) => void;
+  toggleDarkMode: () => void;
   theme: Theme;
 };
 export const ThemeContext =
@@ -42,12 +20,24 @@ export const ThemeProvider: FunctionComponent = ({ children }) => {
   const [useDarkMode, setUseDarkMode] = useState(true);
 
   const theme = useMemo(
-    () => (useDarkMode ? DarkTheme : LightTheme),
+    () =>
+      createMuiTheme({
+        palette: {
+          type: useDarkMode ? "dark" : "light",
+          primary: cyan,
+          secondary: pink,
+        },
+        props: {
+          MuiInput: { inputProps: { spellCheck: "false" } },
+        },
+      }),
     [useDarkMode]
   );
 
+  const toggleDarkMode = () => setUseDarkMode(!useDarkMode);
+
   return (
-    <ThemeContext.Provider value={{ useDarkMode, setUseDarkMode, theme }}>
+    <ThemeContext.Provider value={{ useDarkMode, toggleDarkMode, theme }}>
       {children}
     </ThemeContext.Provider>
   );

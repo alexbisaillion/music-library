@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import {
   AppBar,
   Button,
@@ -9,11 +9,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { useState } from 'react';
-import { login, logout } from '../../api/authentication';
+  TextField,
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import { useState } from "react";
+import { useAuthentication } from "../../context/authentication";
 
 const NavBarContainer = styled.div`
   flex-grow: 1;
@@ -24,20 +24,12 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 type NavigationBarProps = {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
   menuOnClick: () => void;
 };
 export const NavigationBar = (props: NavigationBarProps) => {
-  const { isLoggedIn, setIsLoggedIn, menuOnClick } = props;
+  const { menuOnClick } = props;
+  const { isLoggedIn, attemptLogout } = useAuthentication();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const attemptLogout = async () => {
-    const success = await logout();
-    if (success) {
-      setIsLoggedIn(false);
-    }
-  };
 
   const renderLoginStatus = () => {
     return isLoggedIn ? (
@@ -56,7 +48,11 @@ export const NavigationBar = (props: NavigationBarProps) => {
       <NavBarContainer>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <StyledIconButton edge="start" color="inherit" onClick={() => menuOnClick()}>
+            <StyledIconButton
+              edge="start"
+              color="inherit"
+              onClick={() => menuOnClick()}
+            >
               <MenuIcon />
             </StyledIconButton>
             <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
@@ -66,7 +62,10 @@ export const NavigationBar = (props: NavigationBarProps) => {
           </Toolbar>
         </AppBar>
       </NavBarContainer>
-      <LoginDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} setIsLoggedIn={setIsLoggedIn} />
+      <LoginDialog
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+      />
     </>
   );
 };
@@ -74,19 +73,18 @@ export const NavigationBar = (props: NavigationBarProps) => {
 type LoginDialogProps = {
   isDialogOpen: boolean;
   setIsDialogOpen: (isDialogOpen: boolean) => void;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
 };
 const LoginDialog = (props: LoginDialogProps) => {
-  const { isDialogOpen, setIsDialogOpen, setIsLoggedIn } = props;
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { attemptLogin } = useAuthentication();
+  const { isDialogOpen, setIsDialogOpen } = props;
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const attemptLogin = async (username: string, password: string) => {
-    const success = await login({ username, password });
+  const executeLogin = async (username: string, password: string) => {
+    const success = await attemptLogin(username, password);
     if (success) {
-      setUsername('');
-      setPassword('');
-      setIsLoggedIn(true);
+      setUsername("");
+      setPassword("");
       setIsDialogOpen(false);
     }
   };
@@ -95,7 +93,11 @@ const LoginDialog = (props: LoginDialogProps) => {
     <Dialog onClose={() => setIsDialogOpen(false)} open={isDialogOpen}>
       <DialogTitle>Log in</DialogTitle>
       <DialogContent>
-        <TextField value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+        <TextField
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+        />
         <TextField
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -105,7 +107,7 @@ const LoginDialog = (props: LoginDialogProps) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-        <Button onClick={() => attemptLogin(username, password)}>Log in</Button>
+        <Button onClick={() => executeLogin(username, password)}>Log in</Button>
       </DialogActions>
     </Dialog>
   );

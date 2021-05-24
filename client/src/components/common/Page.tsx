@@ -1,10 +1,11 @@
-import { Container, CssBaseline } from '@material-ui/core';
+import { Container, CssBaseline } from "@material-ui/core";
+import { FunctionComponent } from "react";
 
-export const PageContainer = (props: { children: React.ReactNode }) => {
+export const PageContainer: FunctionComponent = ({ children }) => {
   return (
     <Container component="main" maxWidth="lg">
       <CssBaseline />
-      {props.children}
+      {children}
     </Container>
   );
 };

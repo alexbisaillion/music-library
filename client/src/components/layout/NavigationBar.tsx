@@ -48,7 +48,7 @@ export const NavigationBar = (props: NavigationBarProps) => {
   return (
     <>
       <NavBarContainer>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar variant="dense">
             <StyledIconButton
               edge="start"

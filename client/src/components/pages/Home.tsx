@@ -1,7 +1,10 @@
-import styled from 'styled-components';
-import { PageContainer } from '../common/Page';
+import styled from "styled-components";
+import { PageContainer } from "../common/Page";
+import { MainHeading } from "../common/text/MainHeading";
+import { SecondaryHeading } from "../common/text/SecondaryHeading";
 
 const HomeContainer = styled.div`
+  padding-top: 60px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -15,7 +18,11 @@ export const Home = () => {
   return (
     <PageContainer>
       <HomeContainer>
-        <p>Hello friend.</p>
+        <MainHeading text="Alex Bisaillion" />
+        <SecondaryHeading
+          text={["Software developer.", "Something else.", "Another thing."]}
+          useTypewriterEffect
+        />
       </HomeContainer>
     </PageContainer>
   );

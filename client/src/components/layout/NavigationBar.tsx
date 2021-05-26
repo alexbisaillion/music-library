@@ -1,12 +1,19 @@
 import styled from "styled-components";
-import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, IconButton, Toolbar } from "@material-ui/core";
 import { useAuthentication } from "../../context/authentication";
 import { useTheme } from "../../context/theme";
-import { DarkModeIcon, LightModeIcon, MenuToggleIcon } from "../icons/Material";
+import {
+  DarkModeIcon,
+  LightModeIcon,
+  MenuToggleIcon,
+} from "../icons/material-icons";
 import { LoginButton } from "../functional/authentication/LoginButton";
 import { LogoutButton } from "../functional/authentication/LogoutButton";
+import { useState } from "react";
+import { LeftSidebar } from "./LeftSidebar";
+import { Heading } from "../common/text/Heading";
 
-const NavBarContainer = styled.div`
+const NavigationBarContainer = styled.div`
   flex-grow: 1;
 `;
 
@@ -14,38 +21,39 @@ const StyledIconButton = styled(IconButton)`
   margin-right: 16px;
 `;
 
-type NavigationBarProps = {
-  menuOnClick: () => void;
-};
-export const NavigationBar = (props: NavigationBarProps) => {
-  const { menuOnClick } = props;
+export const NavigationBar = () => {
   const { isLoggedIn } = useAuthentication();
   const { useDarkMode, toggleDarkMode } = useTheme();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const renderLoginStatus = () => {
     return isLoggedIn ? <LogoutButton /> : <LoginButton />;
   };
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   return (
-    <NavBarContainer>
-      <AppBar position="fixed">
-        <Toolbar variant="dense">
-          <StyledIconButton
-            edge="start"
-            color="inherit"
-            onClick={() => menuOnClick()}
-          >
-            <MenuToggleIcon />
-          </StyledIconButton>
-          <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
-            Alex Bisaillion
-          </Typography>
-          <IconButton onClick={toggleDarkMode}>
-            {useDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-          </IconButton>
-          {renderLoginStatus()}
-        </Toolbar>
-      </AppBar>
-    </NavBarContainer>
+    <>
+      <NavigationBarContainer>
+        <AppBar position="fixed">
+          <Toolbar variant="dense">
+            <StyledIconButton
+              edge="start"
+              color="inherit"
+              onClick={toggleSidebar}
+            >
+              <MenuToggleIcon />
+            </StyledIconButton>
+            {/* style={{ flex: 1 }} */}
+            <Heading text="Alex Bisaillion" />
+            <IconButton onClick={toggleDarkMode}>
+              {useDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+            {renderLoginStatus()}
+          </Toolbar>
+        </AppBar>
+      </NavigationBarContainer>
+      <LeftSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    </>
   );
 };

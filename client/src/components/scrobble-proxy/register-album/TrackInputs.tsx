@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { createManyTracks, TrackParamsResult, CreateTrackParams } from '../../../api/storage';
-import { Artist, Release } from '../../../api/types';
-import { TextInput } from '../../common/forms/TextInput';
-import { StripIcon } from '../../icons/Material';
-import { TrackInput } from './TrackInput';
-import produce from 'immer';
-import { TextButton } from '../../common/forms/TextButton';
+import { useState } from "react";
+import {
+  createManyTracks,
+  TrackParamsResult,
+  CreateTrackParams,
+} from "../../../api/storage";
+import { Artist, Release } from "../../../api/types";
+import { TextInput } from "../../common/forms/TextInput";
+import { StripIcon } from "../../icons/material-icons";
+import { TrackInput } from "./TrackInput";
+import produce from "immer";
+import { TextButton } from "../../common/forms/TextButton";
 
 type TrackInputsProps = {
   tracksParams: TrackParamsResult[];
@@ -14,7 +18,7 @@ type TrackInputsProps = {
 export const TrackInputs = (props: TrackInputsProps) => {
   const { tracksParams, release } = props;
   const [tracks, setTracks] = useState<TrackParamsResult[]>(tracksParams);
-  const [commonTerm, setCommonTerm] = useState('');
+  const [commonTerm, setCommonTerm] = useState("");
 
   const addArtist = (newArtist: Artist) => {
     const [spotifyArtistId] = newArtist.spotifyIds;
@@ -26,7 +30,10 @@ export const TrackInputs = (props: TrackInputsProps) => {
           }
           for (const artist of track.spotifyTrack.artists) {
             if (artist.spotifyArtist?.spotifyArtistId === spotifyArtistId) {
-              artist.existingArtist = { _id: newArtist._id, name: newArtist.name };
+              artist.existingArtist = {
+                _id: newArtist._id,
+                name: newArtist.name,
+              };
               artist.isRegistered = true;
             }
           }
@@ -38,7 +45,9 @@ export const TrackInputs = (props: TrackInputsProps) => {
   const setTrackName = (spotifyTrackId: string, trackName: string) => {
     setTracks(
       produce(tracks, (draft) => {
-        const spotifyTrack = draft.find((track) => track.spotifyTrack?.spotifyTrackId === spotifyTrackId)?.spotifyTrack;
+        const spotifyTrack = draft.find(
+          (track) => track.spotifyTrack?.spotifyTrackId === spotifyTrackId
+        )?.spotifyTrack;
         if (spotifyTrack) {
           spotifyTrack.name = trackName;
         }
@@ -53,7 +62,10 @@ export const TrackInputs = (props: TrackInputsProps) => {
           if (track.isRegistered) {
             continue;
           }
-          track.spotifyTrack.name = track.spotifyTrack.name.replace(commonTerm, '');
+          track.spotifyTrack.name = track.spotifyTrack.name.replace(
+            commonTerm,
+            ""
+          );
         }
       })
     );
@@ -61,7 +73,9 @@ export const TrackInputs = (props: TrackInputsProps) => {
 
   const isCreateTracksDisabled = () => {
     return tracks.some(
-      (track) => !track.isRegistered && track.spotifyTrack.artists.some((artist) => !artist.isRegistered)
+      (track) =>
+        !track.isRegistered &&
+        track.spotifyTrack.artists.some((artist) => !artist.isRegistered)
     );
   };
 
@@ -71,14 +85,17 @@ export const TrackInputs = (props: TrackInputsProps) => {
         if (!currentTrack.isRegistered) {
           tracks.push({
             spotifyTrackId: currentTrack.spotifyTrack.spotifyTrackId,
-            artistIds: currentTrack.spotifyTrack.artists.reduce((artists, currentArtist) => {
-              if (currentArtist.isRegistered) {
-                artists.push(currentArtist.existingArtist._id);
-              }
-              return artists;
-            }, [] as string[]),
+            artistIds: currentTrack.spotifyTrack.artists.reduce(
+              (artists, currentArtist) => {
+                if (currentArtist.isRegistered) {
+                  artists.push(currentArtist.existingArtist._id);
+                }
+                return artists;
+              },
+              [] as string[]
+            ),
             name: currentTrack.spotifyTrack.name,
-            releaseId: release._id
+            releaseId: release._id,
           });
         }
         return tracks;
@@ -96,10 +113,18 @@ export const TrackInputs = (props: TrackInputsProps) => {
         setValue={setCommonTerm}
         value={commonTerm}
       />
-      <TextButton label="Save Tracks" disabled={isCreateTracksDisabled()} onClick={createTracks} />
+      <TextButton
+        label="Save Tracks"
+        disabled={isCreateTracksDisabled()}
+        onClick={createTracks}
+      />
       {tracks.map((track) => (
         <TrackInput
-          key={track.isRegistered ? track.existingTrack._id : track.spotifyTrack.spotifyTrackId}
+          key={
+            track.isRegistered
+              ? track.existingTrack._id
+              : track.spotifyTrack.spotifyTrackId
+          }
           trackParams={track}
           addArtist={addArtist}
           setTrackName={setTrackName}

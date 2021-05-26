@@ -5,6 +5,9 @@ import BackspaceIcon from "@material-ui/icons/Backspace";
 import MenuIcon from "@material-ui/icons/Menu";
 import WbSunny from "@material-ui/icons/WbSunny";
 import NightsStay from "@material-ui/icons/NightsStay";
+import HomeIcon from "@material-ui/icons/Home";
+import WorkIcon from "@material-ui/icons/Work";
+import CategoryIcon from "@material-ui/icons/Category";
 
 export const LinkEnabledIcon = () => <Link />;
 export const LinkDisabledIcon = () => <LinkOff />;
@@ -13,3 +16,6 @@ export const StripIcon = () => <BackspaceIcon />;
 export const MenuToggleIcon = () => <MenuIcon />;
 export const LightModeIcon = () => <WbSunny />;
 export const DarkModeIcon = () => <NightsStay />;
+export const HomePageIcon = () => <HomeIcon />;
+export const ExperienceIcon = () => <WorkIcon />;
+export const ProjectsIcon = () => <CategoryIcon />;

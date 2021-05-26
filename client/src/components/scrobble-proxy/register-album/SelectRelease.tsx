@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { createRelease, ReleaseParamsResult } from '../../../api/storage';
-import { Release, ReleaseType } from '../../../api/types';
-import { TextInput } from '../../common/forms/TextInput';
-import { CreateIcon } from '../../icons/Material';
+import { useState } from "react";
+import { createRelease, ReleaseParamsResult } from "../../../api/storage";
+import { Release, ReleaseType } from "../../../api/types";
+import { TextInput } from "../../common/forms/TextInput";
+import { CreateIcon } from "../../icons/material-icons";
 
 type SelectReleaseProps = {
   releaseParams: ReleaseParamsResult;
@@ -11,7 +11,9 @@ type SelectReleaseProps = {
 };
 export const SelectRelease = (props: SelectReleaseProps) => {
   const { releaseParams, artistIds, setReleaseDocument } = props;
-  const [newReleaseName, setNewReleaseName] = useState(releaseParams.spotifyRelease?.name);
+  const [newReleaseName, setNewReleaseName] = useState(
+    releaseParams.spotifyRelease?.name
+  );
   const [newRelease, setNewRelease] = useState<Release>();
 
   const sendCreateRelease = async () => {
@@ -23,7 +25,7 @@ export const SelectRelease = (props: SelectReleaseProps) => {
       artistIds,
       name: newReleaseName || releaseParams.spotifyRelease.name,
       releaseType: ReleaseType.Album,
-      spotifyAlbumId: releaseParams.spotifyRelease.spotifyAlbumId
+      spotifyAlbumId: releaseParams.spotifyRelease.spotifyAlbumId,
     });
     setNewRelease(newRelease);
     setReleaseDocument(newRelease);

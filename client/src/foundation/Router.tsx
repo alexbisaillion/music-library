@@ -14,7 +14,7 @@ export const Router = () => {
 
   return (
     <BrowserRouter>
-      <NavigationBar menuOnClick={() => {}} />
+      <NavigationBar />
       <Route exact path="/" component={Home} />
       {/* Use the new Routes component when React Router DOM is updated to v6 */}
       {/* https://stackoverflow.com/a/49321289 */}

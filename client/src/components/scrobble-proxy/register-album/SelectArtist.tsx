@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { ArtistParamsResult, createArtist } from '../../../api/storage';
-import { Artist } from '../../../api/types';
-import { TextInput } from '../../common/forms/TextInput';
-import { CreateIcon } from '../../icons/Material';
+import { useState } from "react";
+import { ArtistParamsResult, createArtist } from "../../../api/storage";
+import { Artist } from "../../../api/types";
+import { TextInput } from "../../common/forms/TextInput";
+import { CreateIcon } from "../../icons/material-icons";
 
 type SelectArtistProps = {
   artistParams: ArtistParamsResult;
@@ -17,7 +17,10 @@ export const SelectArtist = (props: SelectArtistProps) => {
       return;
     }
 
-    const newArtist = await createArtist(artistParams.spotifyArtist.spotifyArtistId, artistParams.spotifyArtist.name);
+    const newArtist = await createArtist(
+      artistParams.spotifyArtist.spotifyArtistId,
+      artistParams.spotifyArtist.name
+    );
     addArtist(newArtist);
     setNewArtist(newArtist);
   };

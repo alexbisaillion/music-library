@@ -1,14 +1,6 @@
 import styled from "styled-components";
 import { AppBar, Toolbar } from "@material-ui/core";
-import { useAuthentication } from "../../context/authentication";
-import { useTheme } from "../../context/theme";
-import {
-  DarkModeIcon,
-  LightModeIcon,
-  MenuToggleIcon,
-} from "../icons/material-icons";
-import { LoginButton } from "../functional/authentication/LoginButton";
-import { LogoutButton } from "../functional/authentication/LogoutButton";
+import { MenuToggleIcon } from "../icons/material-icons";
 import { useState } from "react";
 import { LeftSidebar } from "./LeftSidebar";
 import { Heading } from "../common/text/Heading";
@@ -26,13 +18,7 @@ const MenuIconButton = styled(IconButton)`
 `;
 
 export const NavigationBar = () => {
-  const { isLoggedIn } = useAuthentication();
-  const { useDarkMode, toggleDarkMode } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const renderLoginStatus = () => {
-    return isLoggedIn ? <LogoutButton /> : <LoginButton />;
-  };
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -43,11 +29,6 @@ export const NavigationBar = () => {
           <Toolbar variant="dense">
             <MenuIconButton onClick={toggleSidebar} icon={<MenuToggleIcon />} />
             <Heading text="Alex Bisaillion" />
-            <IconButton
-              onClick={toggleDarkMode}
-              icon={useDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-            />
-            {renderLoginStatus()}
             <SettingsButton />
           </Toolbar>
         </AppBar>

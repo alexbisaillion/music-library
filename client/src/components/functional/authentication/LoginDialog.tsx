@@ -8,14 +8,11 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { useAuthentication } from "../../../context/authentication";
+import { DialogType, useDialogs } from "../../../context/dialogs";
 
-type LoginDialogProps = {
-  isDialogOpen: boolean;
-  setIsDialogOpen: (isDialogOpen: boolean) => void;
-};
-export const LoginDialog = (props: LoginDialogProps) => {
+export const LoginDialog = () => {
   const { attemptLogin } = useAuthentication();
-  const { isDialogOpen, setIsDialogOpen } = props;
+  const { hideDialog } = useDialogs();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,25 +21,12 @@ export const LoginDialog = (props: LoginDialogProps) => {
     if (success) {
       setUsername("");
       setPassword("");
-      setIsDialogOpen(false);
-    }
-  };
-
-  // TODO: Add global dialog handling and get rid of this workaround.
-  const stopPropagationForTab = (
-    event: React.KeyboardEvent<HTMLDivElement>
-  ) => {
-    if (event.key === "Tab") {
-      event.stopPropagation();
+      hideDialog(DialogType.Login);
     }
   };
 
   return (
-    <Dialog
-      onClose={() => setIsDialogOpen(false)}
-      open={isDialogOpen}
-      onKeyDown={stopPropagationForTab}
-    >
+    <Dialog onClose={() => hideDialog(DialogType.Login)} open>
       <DialogTitle>Log in</DialogTitle>
       <DialogContent>
         <TextField
@@ -59,7 +43,7 @@ export const LoginDialog = (props: LoginDialogProps) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+        <Button onClick={() => hideDialog(DialogType.Login)}>Cancel</Button>
         <Button onClick={() => executeLogin(username, password)}>Log in</Button>
       </DialogActions>
     </Dialog>

@@ -8,6 +8,7 @@ import NightsStay from "@material-ui/icons/NightsStay";
 import HomeIcon from "@material-ui/icons/Home";
 import WorkIcon from "@material-ui/icons/Work";
 import CategoryIcon from "@material-ui/icons/Category";
+import Settings from "@material-ui/icons/Settings";
 
 export const LinkEnabledIcon = () => <Link />;
 export const LinkDisabledIcon = () => <LinkOff />;
@@ -19,3 +20,4 @@ export const DarkModeIcon = () => <NightsStay />;
 export const HomePageIcon = () => <HomeIcon />;
 export const ExperienceIcon = () => <WorkIcon />;
 export const ProjectsIcon = () => <CategoryIcon />;
+export const SettingsIcon = () => <Settings />;

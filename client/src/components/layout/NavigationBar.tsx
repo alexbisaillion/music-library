@@ -6,7 +6,6 @@ import {
   DarkModeIcon,
   LightModeIcon,
   MenuToggleIcon,
-  SettingsIcon,
 } from "../icons/material-icons";
 import { LoginButton } from "../functional/authentication/LoginButton";
 import { LogoutButton } from "../functional/authentication/LogoutButton";
@@ -14,6 +13,7 @@ import { useState } from "react";
 import { LeftSidebar } from "./LeftSidebar";
 import { Heading } from "../common/text/Heading";
 import { IconButton } from "../common/forms/IconButton";
+import { SettingsButton } from "../functional/settings/SettingsButton";
 
 const NavigationBarContainer = styled.div`
   flex-grow: 1;
@@ -25,24 +25,16 @@ const MenuIconButton = styled(IconButton)`
   }
 `;
 
-const SettingsIconButton = styled(IconButton)`
-  && {
-    margin-left: auto;
-  }
-`;
-
 export const NavigationBar = () => {
   const { isLoggedIn } = useAuthentication();
   const { useDarkMode, toggleDarkMode } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
 
   const renderLoginStatus = () => {
     return isLoggedIn ? <LogoutButton /> : <LoginButton />;
   };
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const toggleSettingsMenu = () => setIsSettingsMenuOpen(!isSettingsMenuOpen);
 
   return (
     <>
@@ -56,10 +48,7 @@ export const NavigationBar = () => {
               icon={useDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
             />
             {renderLoginStatus()}
-            <SettingsIconButton
-              onClick={toggleSettingsMenu}
-              icon={<SettingsIcon />}
-            />
+            <SettingsButton />
           </Toolbar>
         </AppBar>
       </NavigationBarContainer>

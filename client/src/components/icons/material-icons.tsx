@@ -9,6 +9,8 @@ import HomeIcon from "@material-ui/icons/Home";
 import WorkIcon from "@material-ui/icons/Work";
 import CategoryIcon from "@material-ui/icons/Category";
 import Settings from "@material-ui/icons/Settings";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import LockIcon from "@material-ui/icons/Lock";
 
 export const LinkEnabledIcon = () => <Link />;
 export const LinkDisabledIcon = () => <LinkOff />;
@@ -21,3 +23,5 @@ export const HomePageIcon = () => <HomeIcon />;
 export const ExperienceIcon = () => <WorkIcon />;
 export const ProjectsIcon = () => <CategoryIcon />;
 export const SettingsIcon = () => <Settings />;
+export const LoginIcon = () => <LockOpenIcon />;
+export const LogoutIcon = () => <LockIcon />;

@@ -28,11 +28,25 @@ export const LoginDialog = (props: LoginDialogProps) => {
     }
   };
 
+  // TODO: Add global dialog handling and get rid of this workaround.
+  const stopPropagationForTab = (
+    event: React.KeyboardEvent<HTMLDivElement>
+  ) => {
+    if (event.key === "Tab") {
+      event.stopPropagation();
+    }
+  };
+
   return (
-    <Dialog onClose={() => setIsDialogOpen(false)} open={isDialogOpen}>
+    <Dialog
+      onClose={() => setIsDialogOpen(false)}
+      open={isDialogOpen}
+      onKeyDown={stopPropagationForTab}
+    >
       <DialogTitle>Log in</DialogTitle>
       <DialogContent>
         <TextField
+          autoFocus
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"

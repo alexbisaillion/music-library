@@ -11,6 +11,9 @@ import CategoryIcon from "@material-ui/icons/Category";
 import Settings from "@material-ui/icons/Settings";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
+import Github from "@material-ui/icons/GitHub";
+import LinkedIn from "@material-ui/icons/LinkedIn";
+import Mail from "@material-ui/icons/Mail";
 
 export const LinkEnabledIcon = () => <Link />;
 export const LinkDisabledIcon = () => <LinkOff />;
@@ -25,3 +28,6 @@ export const ProjectsIcon = () => <CategoryIcon />;
 export const SettingsIcon = () => <Settings />;
 export const LoginIcon = () => <LockOpenIcon />;
 export const LogoutIcon = () => <LockIcon />;
+export const GitHubIcon = () => <Github />;
+export const LinkedInIcon = () => <LinkedIn />;
+export const MailIcon = () => <Mail />;

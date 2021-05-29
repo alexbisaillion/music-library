@@ -11,6 +11,7 @@ export const AuthenticationMenuItem = forwardRef<HTMLLIElement>(
 
     return (
       <MenuListItem
+        ref={ref}
         onClick={() => {
           if (isLoggedIn) {
             attemptLogout();

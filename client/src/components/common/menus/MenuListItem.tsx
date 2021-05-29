@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { ListItemIcon, ListItemText, MenuItem } from "@material-ui/core";
 
 type MenuListItemProps = {
@@ -5,11 +6,13 @@ type MenuListItemProps = {
   text: string;
   icon?: JSX.Element;
 };
-export const MenuListItem = ({ onClick, text, icon }: MenuListItemProps) => {
-  return (
-    <MenuItem onClick={onClick}>
-      {icon && <ListItemIcon>{icon}</ListItemIcon>}
-      <ListItemText primary={text} />
-    </MenuItem>
-  );
-};
+export const MenuListItem = forwardRef<HTMLLIElement, MenuListItemProps>(
+  ({ onClick, text, icon }, ref) => {
+    return (
+      <MenuItem onClick={onClick} ref={ref}>
+        {icon && <ListItemIcon>{icon}</ListItemIcon>}
+        <ListItemText primary={text} />
+      </MenuItem>
+    );
+  }
+);

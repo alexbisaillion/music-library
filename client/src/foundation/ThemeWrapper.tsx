@@ -1,4 +1,4 @@
-import { useTheme } from "../context/theme";
+import { useTheme } from "../context/theme-context";
 import { MuiThemeProvider } from "@material-ui/core";
 import { FunctionComponent } from "react";
 

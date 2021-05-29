@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
-import { useAuthentication } from "../../../context/authentication";
+import { useAuthentication } from "../../../context/authentication-context";
 import { DialogType, useDialogs } from "../../../context/dialogs";
-import { MenuListItem } from "../../common/menus/MenuListItem";
+import { MenuItem } from "../../common/menus/MenuListItem";
 import { LoginIcon, LogoutIcon } from "../../icons/material-icons";
 
 export const AuthenticationMenuItem = forwardRef<HTMLLIElement>(
@@ -10,7 +10,7 @@ export const AuthenticationMenuItem = forwardRef<HTMLLIElement>(
     const { showDialog } = useDialogs();
 
     return (
-      <MenuListItem
+      <MenuItem
         ref={ref}
         onClick={() => {
           if (isLoggedIn) {

@@ -1,18 +1,30 @@
 import { forwardRef } from "react";
-import { ListItemIcon, ListItemText, MenuItem } from "@material-ui/core";
+import {
+  ListItemIcon,
+  ListItemText,
+  MenuItem as MaterialMenuItem,
+} from "@material-ui/core";
+import { useMenu } from "../../../context/menu-context";
 
-type MenuListItemProps = {
+type MenuItemProps = {
   onClick: () => void;
   text: string;
   icon?: JSX.Element;
 };
-export const MenuListItem = forwardRef<HTMLLIElement, MenuListItemProps>(
+export const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
   ({ onClick, text, icon }, ref) => {
+    const { toggleMenu } = useMenu();
     return (
-      <MenuItem onClick={onClick} ref={ref}>
+      <MaterialMenuItem
+        onClick={() => {
+          onClick();
+          toggleMenu();
+        }}
+        ref={ref}
+      >
         {icon && <ListItemIcon>{icon}</ListItemIcon>}
         <ListItemText primary={text} />
-      </MenuItem>
+      </MaterialMenuItem>
     );
   }
 );

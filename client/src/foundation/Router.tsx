@@ -2,7 +2,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { Home } from "../components/pages/home/Home";
 import { RegisterAlbum } from "../components/scrobble-proxy/register-album/RegisterAlbum";
 import { ErrorPage } from "../components/pages/ErrorPage";
-import { useAuthentication } from "../context/authentication";
+import { useAuthentication } from "../context/authentication-context";
 import { BaseAppComponents } from "./BaseAppComponents";
 
 export const Router = () => {

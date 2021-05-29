@@ -1,4 +1,4 @@
-import { Menu } from "@material-ui/core";
+import { Menu } from "../common/menus/Menu";
 import { AuthenticationMenuItem } from "./settings/AuthenticationMenuItem";
 import { ThemeMenuItem } from "./settings/ThemeMenuItem";
 
@@ -13,14 +13,7 @@ export const SettingsMenu = ({
   anchorEl,
 }: SettingsMenuProps) => {
   return (
-    <Menu
-      anchorEl={anchorEl}
-      // getContentAnchorEl={null}
-      // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      // transformOrigin={{ vertical: "top", horizontal: "center" }}
-      open={isOpen}
-      onClose={toggleSettingsMenu}
-    >
+    <Menu isOpen={isOpen} toggleMenu={toggleSettingsMenu} anchorEl={anchorEl}>
       <ThemeMenuItem />
       <AuthenticationMenuItem />
     </Menu>

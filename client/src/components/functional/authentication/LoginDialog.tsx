@@ -7,7 +7,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { useState } from "react";
-import { useAuthentication } from "../../../context/authentication";
+import { useAuthentication } from "../../../context/authentication-context";
 import { DialogType, useDialogs } from "../../../context/dialogs";
 
 export const LoginDialog = () => {

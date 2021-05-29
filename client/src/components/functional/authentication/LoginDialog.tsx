@@ -8,11 +8,11 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { useAuthentication } from "../../../context/authentication-context";
-import { DialogType, useDialogs } from "../../../context/dialogs";
+import { useDialog } from "../../../context/dialogs-context";
 
 export const LoginDialog = () => {
   const { attemptLogin } = useAuthentication();
-  const { hideDialog } = useDialogs();
+  const { hideDialog } = useDialog();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,12 +21,12 @@ export const LoginDialog = () => {
     if (success) {
       setUsername("");
       setPassword("");
-      hideDialog(DialogType.Login);
+      hideDialog();
     }
   };
 
   return (
-    <Dialog onClose={() => hideDialog(DialogType.Login)} open>
+    <Dialog onClose={() => hideDialog()} open>
       <DialogTitle>Log in</DialogTitle>
       <DialogContent>
         <TextField
@@ -43,7 +43,7 @@ export const LoginDialog = () => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => hideDialog(DialogType.Login)}>Cancel</Button>
+        <Button onClick={() => hideDialog()}>Cancel</Button>
         <Button onClick={() => executeLogin(username, password)}>Log in</Button>
       </DialogActions>
     </Dialog>

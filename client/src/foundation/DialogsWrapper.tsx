@@ -1,4 +1,4 @@
-import { useDialogs, DialogType } from "../context/dialogs";
+import { useDialog, DialogType } from "../context/dialogs-context";
 import { LoginDialog } from "../components/functional/authentication/LoginDialog";
 
 const dialogComponentMap: Map<DialogType, JSX.Element> = new Map([
@@ -6,7 +6,7 @@ const dialogComponentMap: Map<DialogType, JSX.Element> = new Map([
 ]);
 
 export const DialogsWrapper = () => {
-  const { currentDialog } = useDialogs();
+  const { currentDialog } = useDialog();
 
   if (currentDialog === undefined) {
     return <></>;

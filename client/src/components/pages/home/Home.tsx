@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { PageContainer } from "../../common/Page";
-import { AboutMe } from "./AboutMe";
+import { HomeCards } from "./HomeCards";
 import { Introduction } from "./Introduction";
 
 const HomeContainer = styled.div`
@@ -10,7 +10,7 @@ const HomeContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   && > * {
-    margin: 8px;
+    margin: 16px;
   }
 `;
 
@@ -19,7 +19,7 @@ export const Home = () => {
     <PageContainer>
       <HomeContainer>
         <Introduction />
-        <AboutMe />
+        <HomeCards />
       </HomeContainer>
     </PageContainer>
   );

@@ -1,42 +1,48 @@
 import styled from "styled-components";
-import { Paper } from "@material-ui/core";
-import { Body } from "../../common/text/Body";
-import { SecondaryHeading } from "../../common/text/SecondaryHeading";
-import { IconButton } from "../../common/forms/IconButton";
 import { GitHubIcon, LinkedInIcon, MailIcon } from "../../icons/material-icons";
-
-const IntroductionContainer = styled.div`
-  padding: 16px;
-  display: flex;
-`;
-
-const BiographyContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-right: 16px;
-`;
+import { LinkIconButton } from "../../common/forms/LinkIconButton";
+import { LinkTextButton } from "../../common/forms/LinkTextButton";
+import { ImageCard } from "../../common/display/ImageCard";
 
 const LinksContainer = styled.div`
-  align-self: center;
   display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  && > * {
+    padding: 0 4px;
+  }
 `;
 
 export const Introduction = () => {
   return (
-    <Paper elevation={3}>
-      <IntroductionContainer>
-        <BiographyContainer>
-          <SecondaryHeading text="Hello there!" />
-          <br />
-          <Body text="I'm Alex Bisaillion, a full-stack software developer. Welcome to my website!" />
-          <br />
-          <LinksContainer>
-            <IconButton onClick={() => {}} icon={<GitHubIcon />} />
-            <IconButton onClick={() => {}} icon={<LinkedInIcon />} />
-            <IconButton onClick={() => {}} icon={<MailIcon />} />
-          </LinksContainer>
-        </BiographyContainer>
-      </IntroductionContainer>
-    </Paper>
+    <ImageCard
+      height={250}
+      width="full-width"
+      image="img/splash.jpg"
+      title="Welcome!"
+      description="I'm Alex Bisaillion, a full-stack software developer based in Ottawa, Canada. This is my personal website."
+      action={
+        <LinksContainer>
+          <LinkIconButton
+            link="https://github.com/alexbisaillion"
+            icon={<GitHubIcon size="large" />}
+          />
+          <LinkIconButton
+            link="https://www.linkedin.com/in/alexbisaillion/"
+            icon={<LinkedInIcon size="large" />}
+          />
+          <LinkIconButton
+            link="mailto:a.bisaillion@gmail.com"
+            icon={<MailIcon size="large" />}
+          />
+          <LinkTextButton
+            link="resume.pdf"
+            isInternal={false}
+            label="My Resume"
+          />
+        </LinksContainer>
+      }
+    />
   );
 };

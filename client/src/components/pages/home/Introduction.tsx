@@ -18,7 +18,7 @@ export const Introduction = () => {
   return (
     <ImageCard
       height={250}
-      width="full-width"
+      width="100%"
       image="img/splash.jpg"
       title="Welcome!"
       description="I'm Alex Bisaillion, a full-stack software developer based in Ottawa, Canada. This is my personal website."

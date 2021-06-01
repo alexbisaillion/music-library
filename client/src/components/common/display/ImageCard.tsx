@@ -10,10 +10,9 @@ import {
 import { LinkTextButton } from "../forms/LinkTextButton";
 import { Fragment } from "react";
 
-type StyledCardProps = { $width: number | "full-width" };
+type StyledCardProps = { $width: string };
 const StyledCard = styled(Card)<StyledCardProps>`
-  width: ${(props) =>
-    props.$width === "full-width" ? "100%" : `${props.$width}px`};
+  width: ${(props) => props.$width};
 `;
 
 type StyledCardMediaProps = { $height: number };
@@ -34,7 +33,7 @@ type ImageCardProps = {
   linkInfo?: LinkInfo;
   action?: JSX.Element;
   height: number;
-  width: number | "full-width";
+  width: string;
 };
 export const ImageCard = ({
   image,

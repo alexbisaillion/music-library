@@ -42,7 +42,7 @@ export const HomeCards = () => {
           image="img/me.jpg"
           title="Experience"
           description="A walkthrough of my work experience as a software developer, chronicling the technologies and projects I've worked on professionally."
-          linkInfo={{ isInternal: true, link: "employment", label: "View" }}
+          linkInfo={{ isInternal: true, link: "experience", label: "View" }}
         />
         <ImageCard
           height={200}

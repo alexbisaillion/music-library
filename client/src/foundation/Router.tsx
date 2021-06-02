@@ -4,6 +4,7 @@ import { RegisterAlbum } from "../components/scrobble-proxy/register-album/Regis
 import { ErrorPage } from "../components/pages/ErrorPage";
 import { useAuthentication } from "../context/authentication-context";
 import { BaseAppComponents } from "./BaseAppComponents";
+import { Experience } from "../components/pages/Experience";
 
 export const Router = () => {
   const { isLoggedIn } = useAuthentication();
@@ -16,6 +17,7 @@ export const Router = () => {
     <BrowserRouter>
       <BaseAppComponents />
       <Route exact path="/" component={Home} />
+      <Route path="/experience" component={Experience} />
       {/* Use the new Routes component when React Router DOM is updated to v6 */}
       {/* https://stackoverflow.com/a/49321289 */}
       <Route

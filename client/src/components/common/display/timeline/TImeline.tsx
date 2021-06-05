@@ -13,13 +13,6 @@ const TimelineRow = styled.div`
   width: 100%;
 `;
 
-type DummyContainerProps = { $pinLeft?: boolean };
-const DummyContainer = styled.div<DummyContainerProps>`
-  display: flex;
-  width: 45%;
-  justify-content: ${(props) => (props.$pinLeft ? "flex-start" : "flex-end")};
-`;
-
 const DividerContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -32,25 +25,12 @@ type TimelineProps = {
 export const Timeline = ({ entries }: TimelineProps) => {
   return (
     <TimelineContainer>
-      {entries.map((entry, index) => (
+      {entries.map((entry) => (
         <TimelineRow key={entry.title}>
-          {index % 2 === 0 ? (
-            <DummyContainer />
-          ) : (
-            <DummyContainer key={entry.title}>
-              <TimelineEntry {...entry} />
-            </DummyContainer>
-          )}
           <DividerContainer>
             <Divider orientation="vertical" />
           </DividerContainer>
-          {index % 2 === 0 ? (
-            <DummyContainer key={entry.title} $pinLeft>
-              <TimelineEntry {...entry} />
-            </DummyContainer>
-          ) : (
-            <DummyContainer />
-          )}
+          <TimelineEntry {...entry} />
         </TimelineRow>
       ))}
     </TimelineContainer>

@@ -32,7 +32,7 @@ const SkillsContainer = styled.div`
 export type TimelineEntryProps = {
   title: string;
   subtitle: string;
-  skillItems: { icon?: JSX.Element; label: string }[];
+  skillItems: { icon?: JSX.Element; displayValue: string }[];
 };
 
 export const TimelineEntry = ({
@@ -51,7 +51,7 @@ export const TimelineEntry = ({
       </HeaderContainer>
       <SkillsContainer>
         {skillItems.map((skill) => (
-          <Chip key={skill.label} {...skill} />
+          <Chip key={skill.displayValue} {...skill} />
         ))}
       </SkillsContainer>
     </StyledPaper>

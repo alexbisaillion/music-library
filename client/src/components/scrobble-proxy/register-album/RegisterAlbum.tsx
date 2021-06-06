@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { AlbumParamsResponse, getAlbumParams } from '../../../api/storage';
-import { Artist, Release } from '../../../api/types';
-import { PageContainer } from '../../common/Page';
-import { FetchAlbum } from './FetchAlbum';
-import { SelectRelease } from './SelectRelease';
-import { SelectArtists } from './SelectReleaseArtists';
-import { TrackInputs } from './TrackInputs';
+import { useState } from "react";
+import styled from "styled-components";
+import { AlbumParamsResponse, getAlbumParams } from "../../../api/storage";
+import { Artist, Release } from "../../../api/types";
+import { PageContainer } from "../../common/Page";
+import { FetchAlbum } from "./FetchAlbum";
+import { SelectRelease } from "./SelectRelease";
+import { SelectArtists } from "./SelectReleaseArtists";
+import { TrackInputs } from "./TrackInputs";
 
 const RegisterAlbumContainer = styled.div`
   display: flex;
+  padding-top: 60px;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
@@ -22,12 +23,15 @@ export enum RegisterAlbumState {
   InputSpotifyId,
   CreateAlbumArtists,
   CreateRelease,
-  CreateTracks
+  CreateTracks,
 }
 
 export const RegisterAlbum = () => {
-  const [registerAlbumState, setRegisterAlbumState] = useState(RegisterAlbumState.InputSpotifyId);
-  const [initialAlbumParams, setInitialAlbumParams] = useState<AlbumParamsResponse>();
+  const [registerAlbumState, setRegisterAlbumState] = useState(
+    RegisterAlbumState.InputSpotifyId
+  );
+  const [initialAlbumParams, setInitialAlbumParams] =
+    useState<AlbumParamsResponse>();
   const [albumArtistIds, setAlbumArtistIds] = useState<string[]>();
   const [releaseDocument, setReleaseDocument] = useState<Release>();
 
@@ -47,7 +51,10 @@ export const RegisterAlbum = () => {
       }
     }
 
-    if (registeredAlbumArtistIds.length === albumParams.release.spotifyRelease.albumArtists.length) {
+    if (
+      registeredAlbumArtistIds.length ===
+      albumParams.release.spotifyRelease.albumArtists.length
+    ) {
       setAlbumArtistIds(registeredAlbumArtistIds);
       setRegisterAlbumState(RegisterAlbumState.CreateRelease);
       return;
@@ -71,9 +78,16 @@ export const RegisterAlbum = () => {
 
     const { _id: artistId } = artist;
 
-    const newAlbumArtistIds = albumArtistIds ? [...albumArtistIds, artistId] : [artistId];
-    setAlbumArtistIds(albumArtistIds ? [...albumArtistIds, artistId] : [artistId]);
-    if (newAlbumArtistIds.length === initialAlbumParams.release.spotifyRelease.albumArtists.length) {
+    const newAlbumArtistIds = albumArtistIds
+      ? [...albumArtistIds, artistId]
+      : [artistId];
+    setAlbumArtistIds(
+      albumArtistIds ? [...albumArtistIds, artistId] : [artistId]
+    );
+    if (
+      newAlbumArtistIds.length ===
+      initialAlbumParams.release.spotifyRelease.albumArtists.length
+    ) {
       setRegisterAlbumState(RegisterAlbumState.CreateRelease);
     }
   };
@@ -122,11 +136,20 @@ export const RegisterAlbum = () => {
   };
 
   const renderTrackInputs = () => {
-    if (registerAlbumState !== RegisterAlbumState.CreateTracks || !initialAlbumParams || !releaseDocument) {
+    if (
+      registerAlbumState !== RegisterAlbumState.CreateTracks ||
+      !initialAlbumParams ||
+      !releaseDocument
+    ) {
       return <></>;
     }
 
-    return <TrackInputs tracksParams={initialAlbumParams.tracks} release={releaseDocument} />;
+    return (
+      <TrackInputs
+        tracksParams={initialAlbumParams.tracks}
+        release={releaseDocument}
+      />
+    );
   };
 
   return (

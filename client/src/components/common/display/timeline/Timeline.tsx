@@ -19,6 +19,12 @@ const DividerContainer = styled.div`
   width: 10%;
 `;
 
+const TimelineEntryContainer = styled.div`
+  display: flex;
+  width: 90%;
+  padding: 4px;
+`;
+
 type TimelineProps = {
   entries: TimelineEntryProps[];
 };
@@ -30,7 +36,9 @@ export const Timeline = ({ entries }: TimelineProps) => {
           <DividerContainer>
             <Divider orientation="vertical" />
           </DividerContainer>
-          <TimelineEntry {...entry} />
+          <TimelineEntryContainer>
+            <TimelineEntry {...entry} />
+          </TimelineEntryContainer>
         </TimelineRow>
       ))}
     </TimelineContainer>

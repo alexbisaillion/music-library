@@ -1,4 +1,6 @@
-import { Divider } from "@material-ui/core";
+import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
+import TimelineConnector from "@material-ui/lab/TimelineConnector";
+import TimelineDot from "@material-ui/lab/TimelineDot";
 import styled from "styled-components";
 import { TimelineEntry, TimelineEntryProps } from "./TimelineEntry";
 
@@ -34,7 +36,11 @@ export const Timeline = ({ entries }: TimelineProps) => {
       {entries.map((entry) => (
         <TimelineRow key={entry.title}>
           <DividerContainer>
-            <Divider orientation="vertical" />
+            <TimelineSeparator>
+              <TimelineConnector />
+              <TimelineDot />
+              <TimelineConnector />
+            </TimelineSeparator>
           </DividerContainer>
           <TimelineEntryContainer>
             <TimelineEntry {...entry} />

@@ -22,6 +22,11 @@ const HeaderTextContainer = styled.div`
   padding: 0 0 4px 16px;
 `;
 
+const DateContainer = styled.div`
+  display: flex;
+  margin-left: auto;
+`;
+
 const SkillsContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -35,6 +40,9 @@ const DescriptionContainer = styled.div`
   padding: 4px 0 0 4px;
   display: flex;
   flex-direction: column;
+  && > * {
+    margin: 2px;
+  }
 `;
 
 export type TimelineEntryProps = {
@@ -43,6 +51,8 @@ export type TimelineEntryProps = {
   subtitle: string;
   skillItems: { icon?: JSX.Element; displayValue: string }[];
   description: string[];
+  start: string;
+  end: string;
 };
 
 export const TimelineEntry = ({
@@ -51,6 +61,8 @@ export const TimelineEntry = ({
   subtitle,
   skillItems,
   description,
+  start,
+  end,
 }: TimelineEntryProps) => {
   return (
     <StyledPaper elevation={3}>
@@ -60,6 +72,9 @@ export const TimelineEntry = ({
           <Heading text={title} />
           <Subtitle text={subtitle} />
         </HeaderTextContainer>
+        <DateContainer>
+          <Subtitle text={`${start} - ${end}`} />
+        </DateContainer>
       </HeaderContainer>
       <SkillsContainer>
         {skillItems.map((skill) => (

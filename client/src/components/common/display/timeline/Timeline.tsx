@@ -34,7 +34,7 @@ export const Timeline = ({ entries }: TimelineProps) => {
   return (
     <TimelineContainer>
       {entries.map((entry) => (
-        <TimelineRow key={entry.title}>
+        <TimelineRow key={entry.title + entry.start + entry.end}>
           <DividerContainer>
             <TimelineSeparator>
               <TimelineConnector />

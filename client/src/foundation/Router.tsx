@@ -6,6 +6,18 @@ import { useAuthentication } from "../context/authentication-context";
 import { BaseAppComponents } from "./BaseAppComponents";
 import { Experience } from "../components/pages/Experience";
 
+export enum RouterPath {
+  Home = "/",
+  Experience = "/experience",
+  ScrobbleProxyRegisterAlbum = "/scrobble-proxy/register-album",
+}
+type RouterPathDisplayValues = { [key in RouterPath]: string };
+export const pathDisplayValues: RouterPathDisplayValues = {
+  "/": "Home",
+  "/experience": "Experience",
+  "/scrobble-proxy/register-album": "Register Album",
+};
+
 export const Router = () => {
   const { isLoggedIn } = useAuthentication();
 
@@ -16,17 +28,13 @@ export const Router = () => {
   return (
     <BrowserRouter>
       <BaseAppComponents />
-      <Route exact path="/" component={Home} />
-      <Route path="/experience" component={Experience} />
+      <Route exact path={RouterPath.Home} component={Home} />
+      <Route path={RouterPath.Experience} component={Experience} />
       {/* Use the new Routes component when React Router DOM is updated to v6 */}
       {/* https://stackoverflow.com/a/49321289 */}
       <Route
-        path="/scrobble-proxy/register-album"
+        path={RouterPath.ScrobbleProxyRegisterAlbum}
         render={() => renderAuthenticatedPage(<RegisterAlbum />)}
-      />
-      <Route
-        path="/updateAlbumTracks"
-        render={() => renderAuthenticatedPage(<p>logged in</p>)}
       />
     </BrowserRouter>
   );

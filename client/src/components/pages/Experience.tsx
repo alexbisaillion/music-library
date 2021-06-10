@@ -22,7 +22,7 @@ export const Experience = () => {
           entries={[
             {
               title: "Software Developer",
-              image: "img/kinaxis.jpg",
+              initial: "K",
               subtitle: "Kinaxis - Ottawa, ON",
               skillItems: [
                 availableBrands.react,
@@ -49,7 +49,7 @@ export const Experience = () => {
             },
             {
               title: "Web Application Developer Co-op",
-              image: "img/kinaxis.jpg",
+              initial: "K",
               subtitle: "Kinaxis - Ottawa, ON",
               skillItems: [
                 availableBrands.react,
@@ -73,7 +73,7 @@ export const Experience = () => {
             },
             {
               title: "Teaching Assistant - Fundamentals of Web Applications",
-              image: "img/carleton.jpg",
+              initial: "C",
               subtitle: "Carleton University - Ottawa, ON",
               skillItems: [
                 availableBrands.javascript,
@@ -90,7 +90,7 @@ export const Experience = () => {
             },
             {
               title: "Platform Developer Co-op",
-              image: "img/kinaxis.jpg",
+              initial: "K",
               subtitle: "Kinaxis - Ottawa, ON",
               skillItems: [
                 availableBrands.csharp,
@@ -106,7 +106,7 @@ export const Experience = () => {
             },
             {
               title: "Teaching Assistant - Introduction to Computer Science II",
-              image: "img/carleton.jpg",
+              initial: "C",
               subtitle: "Carleton University - Ottawa, ON",
               skillItems: [availableBrands.java, { displayValue: "JavaFX" }],
               description: [
@@ -120,7 +120,7 @@ export const Experience = () => {
             },
             {
               title: "Application Developer Co-op",
-              image: "img/kinaxis.jpg",
+              initial: "K",
               subtitle: "Kinaxis - Ottawa, ON",
               skillItems: [availableBrands.csharp, availableBrands.java],
               description: [
@@ -133,7 +133,7 @@ export const Experience = () => {
             },
             {
               title: "Software Developer",
-              image: "img/ingenius.jpg",
+              initial: "I",
               subtitle: "InGenius Software - Ottawa, ON",
               skillItems: [availableBrands.csharp, availableBrands.selenium],
               description: [
@@ -146,7 +146,7 @@ export const Experience = () => {
             },
             {
               title: "Teaching Assistant - Introduction to Computer Science II",
-              image: "img/carleton.jpg",
+              initial: "C",
               subtitle: "Carleton University - Ottawa, ON",
               skillItems: [availableBrands.java, { displayValue: "JavaFX" }],
               description: [

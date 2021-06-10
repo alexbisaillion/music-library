@@ -1,6 +1,6 @@
 import { Paper } from "@material-ui/core";
 import styled from "styled-components";
-import { CircularImage } from "../../images/CircularImage";
+import { AvatarText } from "../../text/AvatarText";
 import { Chip } from "../../text/Chip";
 import { Heading } from "../../text/Heading";
 import { Paragraph } from "../../text/Paragraph";
@@ -47,7 +47,7 @@ const DescriptionContainer = styled.div`
 
 export type TimelineEntryProps = {
   title: string;
-  image: string;
+  initial: string;
   subtitle: string;
   skillItems: { icon?: JSX.Element; displayValue: string }[];
   description: string[];
@@ -57,7 +57,7 @@ export type TimelineEntryProps = {
 
 export const TimelineEntry = ({
   title,
-  image,
+  initial,
   subtitle,
   skillItems,
   description,
@@ -67,7 +67,7 @@ export const TimelineEntry = ({
   return (
     <StyledPaper elevation={3}>
       <HeaderContainer>
-        <CircularImage image={image} alt={title} />
+        <AvatarText text={initial} />
         <HeaderTextContainer>
           <Heading text={title} />
           <Subtitle text={subtitle} />

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { PageContainer } from "../../common/Page";
-import { HomeCards } from "./HomeCards";
+import { AboutMeCard } from "./AboutMeCard";
 import { Introduction } from "./Introduction";
 
 const HomeContainer = styled.div`
@@ -19,7 +19,7 @@ export const Home = () => {
     <PageContainer>
       <HomeContainer>
         <Introduction />
-        <HomeCards />
+        <AboutMeCard />
       </HomeContainer>
     </PageContainer>
   );

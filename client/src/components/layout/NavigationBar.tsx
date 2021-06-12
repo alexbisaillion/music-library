@@ -28,7 +28,7 @@ const getLocationDisplayValue = (location: string) => {
 const StyledDivider = styled(Divider)`
   && {
     height: 24px;
-    margin: 0 8px;
+    margin: 0 12px;
     width: 1.5px;
   }
 `;

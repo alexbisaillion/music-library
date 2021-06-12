@@ -28,15 +28,18 @@ const getLocationDisplayValue = (location: string) => {
 const StyledDivider = styled(Divider)`
   && {
     height: 24px;
-    margin: 0 16px;
+    margin: 0 8px;
     width: 1.5px;
   }
 `;
 
+const StyledHeading = styled(Heading)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
 export const NavigationBar = () => {
-  console.log(getLocationDisplayValue(window.location.href));
-  // const location = useLocation();
-  // console.log(location);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -47,9 +50,9 @@ export const NavigationBar = () => {
         <AppBar position="fixed">
           <Toolbar variant="dense">
             <MenuIconButton onClick={toggleSidebar} icon={<MenuToggleIcon />} />
-            <Heading text="Alex Bisaillion" />
+            <StyledHeading text="Alex Bisaillion" />
             <StyledDivider orientation="vertical" color="textSecondary" />
-            <Heading
+            <StyledHeading
               text={getLocationDisplayValue(window.location.href) || ""}
               isSecondary
             />

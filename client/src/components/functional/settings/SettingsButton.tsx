@@ -4,10 +4,9 @@ import { IconButton } from "../../common/forms/IconButton";
 import { SettingsIcon } from "../../icons/material-icons";
 import { SettingsMenu } from "../../layout/SettingsMenu";
 
-const SettingsIconButton = styled(IconButton)`
-  && {
-    margin-left: auto;
-  }
+const SettingsButtonContainer = styled.div`
+  margin-left: auto;
+  min-width: 48px;
 `;
 
 export const SettingsButton = () => {
@@ -17,8 +16,8 @@ export const SettingsButton = () => {
   const toggleSettingsMenu = () => setIsSettingsMenuOpen(!isSettingsMenuOpen);
 
   return (
-    <>
-      <SettingsIconButton
+    <SettingsButtonContainer>
+      <IconButton
         ref={ref}
         onClick={toggleSettingsMenu}
         icon={<SettingsIcon />}
@@ -28,6 +27,6 @@ export const SettingsButton = () => {
         toggleSettingsMenu={toggleSettingsMenu}
         anchorEl={ref.current}
       />
-    </>
+    </SettingsButtonContainer>
   );
 };

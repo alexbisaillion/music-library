@@ -15,4 +15,8 @@ export const availableBrandDisplayValues: BrandDisplayValues = {
   nodedotjs: "Node.js",
   dotnet: ".NET",
   selenium: "Selenium",
+  python: "Python",
+  axios: "Axios",
+  javafx: "JavaFX",
+  swing: "Swing",
 };

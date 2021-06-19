@@ -30,4 +30,8 @@ export const availableBrandIcons: BrandIcons = {
   nodedotjs: <NodeJSIcon />,
   dotnet: <NETIcon />,
   selenium: <SeleniumIcon />,
+  python: <></>,
+  axios: <></>,
+  javafx: <></>,
+  swing: <></>,
 };

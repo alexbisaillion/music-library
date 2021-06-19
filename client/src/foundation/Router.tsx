@@ -5,6 +5,7 @@ import { ErrorPage } from "../components/pages/ErrorPage";
 import { useAuthentication } from "../context/authentication-context";
 import { BaseAppComponents } from "./BaseAppComponents";
 import { Experience } from "../components/pages/Experience";
+import { Projects } from "../components/pages/Projects";
 
 export enum RouterPath {
   Home = "/",
@@ -32,6 +33,7 @@ export const Router = () => {
       <BaseAppComponents />
       <Route exact path={RouterPath.Home} component={Home} />
       <Route path={RouterPath.Experience} component={Experience} />
+      <Route path={RouterPath.Projects} component={Projects} />
       {/* Use the new Routes component when React Router DOM is updated to v6 */}
       {/* https://stackoverflow.com/a/49321289 */}
       <Route

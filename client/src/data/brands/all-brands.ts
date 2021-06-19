@@ -12,4 +12,8 @@ export enum Brand {
   NodeJS = "nodedotjs",
   NET = "dotnet",
   Selenium = "selenium",
+  Python = "python",
+  Axios = "axios",
+  JavaFX = "javafx",
+  Swing = "swing",
 }

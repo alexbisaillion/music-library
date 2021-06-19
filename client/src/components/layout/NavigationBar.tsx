@@ -7,6 +7,8 @@ import { Heading } from "../common/text/Heading";
 import { IconButton } from "../common/forms/IconButton";
 import { SettingsButton } from "../functional/settings/SettingsButton";
 import { pathDisplayValues, RouterPath } from "../../foundation/Router";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
 
 const NavigationBarContainer = styled.div`
   flex-grow: 1;
@@ -41,8 +43,13 @@ const StyledHeading = styled(Heading)`
 
 export const NavigationBar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const { pathname } = useLocation();
+  const pathDisplay = useMemo(
+    () => getLocationDisplayValue(pathname),
+    [pathname]
+  );
 
   return (
     <>
@@ -51,11 +58,12 @@ export const NavigationBar = () => {
           <Toolbar variant="dense">
             <MenuIconButton onClick={toggleSidebar} icon={<MenuToggleIcon />} />
             <StyledHeading text="Alex Bisaillion" />
-            <StyledDivider orientation="vertical" color="textSecondary" />
-            <StyledHeading
-              text={getLocationDisplayValue(window.location.href) || ""}
-              isSecondary
-            />
+            {pathDisplay && (
+              <>
+                <StyledDivider orientation="vertical" color="textSecondary" />
+                <StyledHeading text={pathDisplay} isSecondary />
+              </>
+            )}
             <SettingsButton />
           </Toolbar>
         </AppBar>

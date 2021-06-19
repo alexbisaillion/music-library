@@ -9,12 +9,14 @@ import { Experience } from "../components/pages/Experience";
 export enum RouterPath {
   Home = "/",
   Experience = "/experience",
+  Projects = "/projects",
   ScrobbleProxyRegisterAlbum = "/scrobble-proxy/register-album",
 }
 type RouterPathDisplayValues = { [key in RouterPath]: string };
 export const pathDisplayValues: RouterPathDisplayValues = {
   "/": "Home",
   "/experience": "Experience",
+  "/projects": "Projects",
   "/scrobble-proxy/register-album": "Register Album",
 };
 

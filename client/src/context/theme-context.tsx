@@ -1,5 +1,5 @@
 import { createMuiTheme, Theme } from "@material-ui/core";
-import { blue, pink } from "@material-ui/core/colors";
+import { teal, pink } from "@material-ui/core/colors";
 import {
   createContext,
   FunctionComponent,
@@ -24,7 +24,7 @@ export const ThemeProvider: FunctionComponent = ({ children }) => {
       createMuiTheme({
         palette: {
           type: useDarkMode ? "dark" : "light",
-          primary: blue,
+          primary: teal,
           secondary: pink,
         },
         props: {

@@ -28,6 +28,7 @@ type LinkInfo = {
 
 type ImageCardProps = {
   image: string;
+  imageDescription?: string;
   title: string;
   description: string | string[];
   linkInfo?: LinkInfo;
@@ -37,6 +38,7 @@ type ImageCardProps = {
 };
 export const ImageCard = ({
   image,
+  imageDescription,
   title,
   description,
   linkInfo,
@@ -68,7 +70,11 @@ export const ImageCard = ({
   return (
     <StyledCard $width={width}>
       <CardActionArea>
-        <StyledCardMedia image={image} title={title} $height={height} />
+        <StyledCardMedia
+          image={image}
+          title={imageDescription || title}
+          $height={height}
+        />
         <CardContent>
           <Typography variant="h5" component="h2" gutterBottom>
             {title}

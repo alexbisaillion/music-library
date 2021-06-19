@@ -6,7 +6,16 @@ import { ImageCard } from "../../common/display/ImageCard";
 import { TextCard } from "../../common/display/TextCard";
 
 const IntroductionContainer = styled.div`
-  display: flex;
+  @media only screen and (min-width: 768px) {
+    display: flex;
+  }
+  @media only screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    && > * {
+      margin: 16px 0;
+    }
+  }
   width: 100%;
 `;
 
@@ -15,8 +24,10 @@ const WelcomeColumn = styled.div`
   flex-direction: column;
   justify-content: space-between;
   box-sixing: border-box;
-  margin-right: 8px;
-  width: 40%;
+  @media only screen and (min-width: 768px) {
+    margin-right: 8px;
+    width: 40%;
+  }
 `;
 
 const LinksColumn = styled.div`
@@ -24,8 +35,15 @@ const LinksColumn = styled.div`
   flex-direction: column;
   justify-content: space-between;
   box-sixing: border-box;
-  margin-left: 8px;
-  width: 60%;
+  @media only screen and (min-width: 768px) {
+    margin-left: 8px;
+    width: 60%;
+  }
+  @media only screen and (max-width: 768px) {
+    && > * {
+      margin: 8px 0;
+    }
+  }
 `;
 
 const LinksContainer = styled.div`

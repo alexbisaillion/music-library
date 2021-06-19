@@ -14,16 +14,23 @@ const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 0 4px;
+  width: 100%;
 `;
 
 const HeaderTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 0 4px 16px;
+  flex-grow: 1;
+`;
+
+const SubtitleContainer = styled.div`
+  @media only screen and (min-width: 768px) {
+    display: flex;
+  }
 `;
 
 const DateContainer = styled.div`
-  display: flex;
   margin-left: auto;
 `;
 
@@ -70,11 +77,13 @@ export const TimelineEntry = ({
         <AvatarText text={initial} />
         <HeaderTextContainer>
           <Heading text={title} />
-          <Subtitle text={subtitle} />
+          <SubtitleContainer>
+            <Subtitle text={subtitle} />
+            <DateContainer>
+              <Subtitle text={`${start} - ${end}`} />
+            </DateContainer>
+          </SubtitleContainer>
         </HeaderTextContainer>
-        <DateContainer>
-          <Subtitle text={`${start} - ${end}`} />
-        </DateContainer>
       </HeaderContainer>
       <SkillsContainer>
         {skillItems.map((skill) => (

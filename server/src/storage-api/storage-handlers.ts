@@ -1,48 +1,13 @@
 import { Response, Request } from 'express';
 import { isNilOrEmpty } from '../helpers/generic-helpers';
 import { sendError, ErrorCode, sendSuccessContent, SuccessCode } from '../helpers/routing';
-import { getAlbumDetails, getAlbumTrackIds, getRecentPlays } from '../spotify-api/spotify-api-methods';
-import { getOrCreateTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
-import { Play } from '../models/play-model';
+import { getAlbumDetails, getAlbumTrackIds } from '../spotify-api/spotify-api-methods';
+import { getOrCreateTrack, getRelease } from './storage-consumers';
 import { getReleaseParams, getTrackParams } from './storage-builders';
 import { createArtist, createRelease, createTrack } from './storage-creators';
 import { ReleaseModel, ReleaseType } from '../models/release-model';
 import { ArtistModel } from '../models/artist-model';
 import { TrackModel } from '../models/track-model';
-
-export const handleRefreshPlays = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const spotifyPlays = await getRecentPlays();
-
-    if (isNilOrEmpty(spotifyPlays)) {
-      sendError(res, ErrorCode.InternalServerError, 'Failed to retrieve recent plays from the Spotify API');
-      return;
-    }
-
-    const newPlays: Play[] = [];
-    if (spotifyPlays) {
-      // TODO: sort plays by timestamp in order to break out of the loop instead of continue.
-      for (const play of spotifyPlays) {
-        if (await hasPlayBeenRegistered(play.timestamp)) {
-          continue;
-        }
-
-        const track = await getOrCreateTrack(play.spotifyTrackId);
-
-        if (!track) {
-          sendError(res, ErrorCode.InternalServerError, 'Failed to get track details from the spotify API');
-          return;
-        }
-
-        newPlays.push(await registerPlay(track, play.timestamp));
-      }
-    }
-
-    sendSuccessContent(res, SuccessCode.OK, newPlays);
-  } catch (error) {
-    sendError(res, ErrorCode.InternalServerError, error);
-  }
-};
 
 export const handleRegisterRelease = async (req: Request, res: Response): Promise<void> => {
   const spotifyAlbumId = req.body.spotifyAlbumId;

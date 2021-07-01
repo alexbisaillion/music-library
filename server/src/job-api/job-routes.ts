@@ -8,9 +8,11 @@ export const jobRouter = Router();
 const handleValidateAuthorized = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   if (!req.body.secret) {
     sendError(res, ErrorCode.Unauthorized, 'Provide the secret to access jobs.');
+    return;
   }
   if (req.body.secret !== environment.variables.SECRET) {
     sendError(res, ErrorCode.Unauthorized, 'Provided secret is invalid.');
+    return;
   }
   next();
 };

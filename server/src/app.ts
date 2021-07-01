@@ -9,6 +9,7 @@ import { environment } from './helpers/environment';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { handleValidateAuthorized } from './authentication-api/authentication-handlers';
+import { jobRouter } from './job-api/job-routes';
 
 // Declaration merging required by express-session
 declare module 'express-session' {
@@ -40,6 +41,7 @@ app.post('*', handleValidateAuthorized); // Validate that every POST is from an 
 app.use(lastfmRouter);
 app.use(spotifyRouter);
 app.use(storageRouter);
+app.use(jobRouter);
 
 // Serve static files from the React app
 app.use(express.static(`${environment.variables.ROOT_DIR}/client/build`));

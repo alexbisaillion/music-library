@@ -36,12 +36,12 @@ app.use(
   })
 );
 app.use(authenticationRouter); // Use authentication router before validating authorization.
+app.use(jobRouter);
 
 app.post('*', handleValidateAuthorized); // Validate that every POST is from an authorized session.
 app.use(lastfmRouter);
 app.use(spotifyRouter);
 app.use(storageRouter);
-app.use(jobRouter);
 
 // Serve static files from the React app
 app.use(express.static(`${environment.variables.ROOT_DIR}/client/build`));

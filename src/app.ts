@@ -21,7 +21,12 @@ const app = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://localhost:3000', 'https://alexbisaillion.github.io/'],
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'http://alexbisaillion.github.io',
+      'https://alexbisaillion.github.io'
+    ],
     methods: ['GET', 'POST']
   })
 );

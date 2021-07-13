@@ -26,6 +26,17 @@ export const updateNowPlaying = async (params: BasePlayParams): Promise<boolean>
   return response.status === 200;
 };
 
+export const getTopArtists = async (params: LastfmPaginationParams): Promise<string[] | undefined> => {
+  const response = await makeLastfmRequest(LastfmMethod.GetTopArtists, params);
+  const body = await response.json();
+
+  if (response.status !== 200 || !body['topartists'] || !body['topartists']['artist']) {
+    return undefined;
+  }
+
+  return body.topartists.artist.map((artist: { name: string }) => artist.name);
+};
+
 type RawTrack = {
   track: string;
   artist: string;
@@ -38,8 +49,8 @@ export const getTopTracks = async (params: LastfmPaginationParams): Promise<RawT
     return undefined;
   }
 
-  return body.toptracks.track.map((t: { name: string; artist: { name: string } }) => ({
-    track: t.name,
-    artist: t.artist.name
+  return body.toptracks.track.map((track: { name: string; artist: { name: string } }) => ({
+    track: track.name,
+    artist: track.artist.name
   }));
 };

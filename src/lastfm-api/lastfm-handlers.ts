@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { getTopTracks, scrobblePlay } from './lastfm-api-methods';
+import { getTopArtists, getTopTracks, scrobblePlay } from './lastfm-api-methods';
 import { sendError, sendSuccess, ErrorCode, SuccessCode, sendSuccessContent } from '../helpers/routing';
 import { isNilOrEmpty } from '../helpers/generic-helpers';
 
@@ -22,6 +22,22 @@ export const handleScrobblePlay = async (req: Request, res: Response): Promise<v
   }
 };
 
+export const handleGetTopArtists = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { limit, page } = req.params;
+    const artists = await getTopArtists({ limit: limit ? parseInt(limit) : 1000, page: page ? parseInt(page) : 1 });
+
+    if (isNilOrEmpty(artists)) {
+      sendError(res, ErrorCode.InternalServerError, 'Failed to get top artists due to an internal error');
+      return;
+    }
+
+    sendSuccessContent(res, SuccessCode.OK, artists);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
+};
+
 export const handleGetTopTracks = async (req: Request, res: Response): Promise<void> => {
   try {
     const { limit, page } = req.params;
@@ -29,6 +45,7 @@ export const handleGetTopTracks = async (req: Request, res: Response): Promise<v
 
     if (isNilOrEmpty(tracks)) {
       sendError(res, ErrorCode.InternalServerError, 'Failed to get top tracks due to an internal error');
+      return;
     }
 
     sendSuccessContent(res, SuccessCode.OK, tracks);

@@ -37,6 +37,24 @@ export const getTopArtists = async (params: LastfmPaginationParams): Promise<str
   return body.topartists.artist.map((artist: { name: string }) => artist.name);
 };
 
+type RawAlbum = {
+  album: string;
+  albumArtist: string;
+};
+export const getTopAlbums = async (params: LastfmPaginationParams): Promise<RawAlbum[] | undefined> => {
+  const response = await makeLastfmRequest(LastfmMethod.GetTopAlbums, params);
+  const body = await response.json();
+
+  if (response.status !== 200 || !body['topalbums'] || !body['topalbums']['album']) {
+    return undefined;
+  }
+
+  return body.topalbums.album.map((album: { name: string; artist: { name: string } }) => ({
+    album: album.name,
+    albumArtist: album.artist.name
+  }));
+};
+
 type RawTrack = {
   track: string;
   artist: string;

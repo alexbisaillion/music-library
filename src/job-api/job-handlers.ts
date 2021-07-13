@@ -39,7 +39,8 @@ const refreshPlays = async (): Promise<Play[] | undefined> => {
   const newPlays: Play[] = [];
   for (const play of spotifyPlays) {
     if (await hasPlayBeenRegistered(play.timestamp)) {
-      break;
+      // break;
+      continue; // 7/13/2021 - Cannot break due to Spotify API instability.
     }
 
     const track = await getOrCreateTrack(play.spotifyTrackId);

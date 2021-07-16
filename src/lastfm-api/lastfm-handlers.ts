@@ -22,6 +22,32 @@ export const handleScrobblePlay = async (req: Request, res: Response): Promise<v
   }
 };
 
+export const handleScrobblePlays = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { plays } = req.body;
+    if (!plays) {
+      sendError(res, ErrorCode.BadRequest, 'Missing plays parameter');
+      return;
+    }
+
+    const results = [];
+    for (const play of plays) {
+      const { track, artist, album, albumArtist, timestamp } = play;
+      if (!track || !artist || !album || !albumArtist || !timestamp) {
+        results.push({ success: false, error: 'Missing parameters', ...play });
+        continue;
+      }
+
+      const result = await scrobblePlay({ track, artist, album, albumArtist, timestamp });
+      results.push({ success: result, ...play });
+    }
+
+    sendSuccessContent(res, SuccessCode.Accepted, results);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
+};
+
 export const handleGetTopArtists = async (req: Request, res: Response): Promise<void> => {
   try {
     const { limit, page } = req.params;

@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import { isNilOrEmpty } from '../helpers/generic-helpers';
 import { sendError, ErrorCode, sendSuccessContent, SuccessCode } from '../helpers/routing';
 import { getAlbumDetails, getAlbumTrackIds } from '../spotify-api/spotify-api-methods';
-import { getOrCreateTrack, getRelease } from './storage-consumers';
+import { getOrCreateTrack, getRelease, hasPlayBeenRegistered, registerPlay } from './storage-consumers';
 import { getReleaseParams, getTrackParams } from './storage-builders';
 import { createArtist, createRelease, createTrack } from './storage-creators';
 import { ReleaseModel, ReleaseType } from '../models/release-model';
@@ -191,6 +191,43 @@ export const handleGetReleases = async (_req: Request, res: Response): Promise<v
   try {
     const releases = await ReleaseModel.find({});
     sendSuccessContent(res, SuccessCode.OK, releases);
+  } catch (error) {
+    sendError(res, ErrorCode.InternalServerError, error);
+  }
+};
+
+export const handleRegisterPlays = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { tracks } = req.body;
+    if (!tracks) {
+      sendError(res, ErrorCode.BadRequest, 'Missing tracks parameter');
+      return;
+    }
+
+    const results = [];
+    for (const track of tracks) {
+      const { spotifyTrackId, timestamp } = track;
+      if (!spotifyTrackId || !timestamp) {
+        results.push({ success: false, error: 'Missing parameters', ...track });
+        continue;
+      }
+
+      if (await hasPlayBeenRegistered(timestamp)) {
+        results.push({ success: false, error: 'Play already registered', ...track });
+        continue;
+      }
+
+      const trackDocument = await getOrCreateTrack(spotifyTrackId);
+      if (!trackDocument) {
+        results.push({ success: false, error: 'Failed to retrieve track', ...track });
+        continue;
+      }
+
+      const result = await registerPlay(trackDocument, timestamp);
+      results.push({ success: true, ...result });
+    }
+
+    sendSuccessContent(res, SuccessCode.Accepted, results);
   } catch (error) {
     sendError(res, ErrorCode.InternalServerError, error);
   }

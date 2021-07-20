@@ -5,7 +5,7 @@ import { handleRefreshPlays } from './job-handlers';
 
 export const jobRouter = Router();
 
-const handleValidateAuthorized = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const validateSecret = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   if (!req.body.secret) {
     sendError(res, ErrorCode.Unauthorized, 'Provide the secret to access jobs.');
     return;
@@ -17,7 +17,5 @@ const handleValidateAuthorized = async (req: Request, res: Response, next: NextF
   next();
 };
 
-jobRouter.post('*', handleValidateAuthorized);
-
 const routeURL = (route: string) => `/job/${route}`;
-jobRouter.post(routeURL('refreshPlays'), handleRefreshPlays);
+jobRouter.post(routeURL('refreshPlays'), validateSecret, handleRefreshPlays);

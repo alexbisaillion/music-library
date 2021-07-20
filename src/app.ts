@@ -1,11 +1,21 @@
 import express from 'express';
 import cors from 'cors';
+import { authenticationRouter } from './authentication-api/authentication-routes';
 import { lastfmRouter } from './lastfm-api/lastfm-routes';
 import { spotifyRouter } from './spotify-api/spotify-routes';
 import { storageRouter } from './storage-api/storage-routes';
 import { environment } from './helpers/environment';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import { handleValidateAuthorized } from './authentication-api/authentication-handlers';
 import { jobRouter } from './job-api/job-routes';
-import { validateAuthorized } from './helpers/routing';
+
+// Declaration merging required by express-session
+declare module 'express-session' {
+  interface Session {
+    isLoggedIn: boolean;
+  }
+}
 
 const app = express();
 
@@ -21,9 +31,18 @@ app.use(
   })
 );
 app.use(express.json());
-
-app.post('*', validateAuthorized); // Validate that every POST request supplies the correct secret.
+app.use(
+  session({
+    secret: environment.variables.SECRET || '',
+    store: MongoStore.create({ mongoUrl: environment.mongoUri, collectionName: 'sessions' }),
+    resave: true,
+    saveUninitialized: true
+  })
+);
+app.use(authenticationRouter); // Use authentication router before validating authorization.
 app.use(jobRouter);
+
+app.post('*', handleValidateAuthorized); // Validate that every POST is from an authorized session.
 app.use(lastfmRouter);
 app.use(spotifyRouter);
 app.use(storageRouter);

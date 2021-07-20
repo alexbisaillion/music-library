@@ -1,4 +1,5 @@
-import { Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { environment } from './environment';
 
 export enum SuccessCode {
   OK = 200,
@@ -21,4 +22,16 @@ export const sendError = (res: Response, code: ErrorCode, errorMessage: string):
 
 export const sendSuccessContent = <T>(res: Response, code: SuccessCode, content: T): void => {
   res.status(code).json(content);
+};
+
+export const validateAuthorized = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.body.secret) {
+    sendError(res, ErrorCode.Unauthorized, 'Provide the secret to access restricted endpoints.');
+    return;
+  }
+  if (req.body.secret !== environment.variables.SECRET) {
+    sendError(res, ErrorCode.Unauthorized, 'Provided secret is invalid.');
+    return;
+  }
+  next();
 };

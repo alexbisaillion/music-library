@@ -29,7 +29,9 @@ app.use(
       'http://alexbisaillion.github.io',
       'https://alexbisaillion.github.io'
     ],
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Set-Cookie']
   })
 );
 app.use(express.json());

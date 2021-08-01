@@ -40,7 +40,11 @@ app.use(
     secret: environment.variables.SECRET || '',
     store: MongoStore.create({ mongoUrl: environment.mongoUri, collectionName: 'sessions' }),
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+      secure: true,
+      sameSite: 'none'
+    }
   })
 );
 app.use(authenticationRouter); // Use authentication router before validating authorization.

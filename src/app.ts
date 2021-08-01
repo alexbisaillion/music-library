@@ -19,6 +19,8 @@ declare module 'express-session' {
 
 const app = express();
 
+app.set('trust proxy', 1); // Allow requests from an external client.
+
 app.use(
   cors({
     origin: [

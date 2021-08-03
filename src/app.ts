@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import { authenticationRouter } from './authentication-api/authentication-routes';
 import { lastfmRouter } from './lastfm-api/lastfm-routes';
@@ -19,8 +20,6 @@ declare module 'express-session' {
 
 const app = express();
 
-app.set('trust proxy', 1); // Allow requests from an external client.
-
 app.use(
   cors({
     origin: [
@@ -29,9 +28,7 @@ app.use(
       'http://alexbisaillion.github.io',
       'https://alexbisaillion.github.io'
     ],
-    methods: ['GET', 'POST'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Set-Cookie']
+    methods: ['GET', 'POST']
   })
 );
 app.use(express.json());
@@ -40,11 +37,7 @@ app.use(
     secret: environment.variables.SECRET || '',
     store: MongoStore.create({ mongoUrl: environment.mongoUri, collectionName: 'sessions' }),
     resave: true,
-    saveUninitialized: true,
-    cookie: {
-      secure: true,
-      sameSite: 'none'
-    }
+    saveUninitialized: true
   })
 );
 app.use(authenticationRouter); // Use authentication router before validating authorization.
@@ -54,6 +47,12 @@ app.post('*', handleValidateAuthorized); // Validate that every POST is from an 
 app.use(lastfmRouter);
 app.use(spotifyRouter);
 app.use(storageRouter);
+
+app.use(express.static(`${environment.variables.ROOT_DIR}/src/client/build`));
+app.get('/*', (_req, res) => {
+  const url = path.join(`${environment.variables.ROOT_DIR}/src/client/build`, 'index.html');
+  res.sendFile(url);
+});
 
 const startServer = async () => {
   if (environment.areAnyVariablesMissing()) {

@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 export enum EnvironmentVariable {
   ApplicationUsername = 'APPLICATION_USERNAME',
   ApplicationPassword = 'APPLICATION_PASSWORD',
+  DeezerAccessToken = 'DEEZER_ACCESS_TOKEN',
   JobUrl = 'JOB_URL',
   LastfmApiKey = 'LASTFM_API_KEY',
   LastfmSession = 'LASTFM_SESSION',

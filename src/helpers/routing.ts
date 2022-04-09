@@ -15,7 +15,7 @@ export enum ErrorCode {
   Forbidden = 403,
   InternalServerError = 500
 }
-export const sendError = (res: Response, code: ErrorCode, errorMessage: string): void => {
+export const sendError = (res: Response, code: ErrorCode, errorMessage: unknown): void => {
   res.status(code).json({ success: false, error: errorMessage });
 };
 

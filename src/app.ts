@@ -4,6 +4,7 @@ import cors from 'cors';
 import { authenticationRouter } from './authentication-api/authentication-routes';
 import { lastfmRouter } from './lastfm-api/lastfm-routes';
 import { spotifyRouter } from './spotify-api/spotify-routes';
+import { deezerRouter } from './deezer-api/deezer-routes';
 import { storageRouter } from './storage-api/storage-routes';
 import { environment } from './helpers/environment';
 import session from 'express-session';
@@ -46,6 +47,7 @@ app.use(jobRouter);
 app.post('*', handleValidateAuthorized); // Validate that every POST is from an authorized session.
 app.use(lastfmRouter);
 app.use(spotifyRouter);
+app.use(deezerRouter);
 app.use(storageRouter);
 
 app.use(express.static(`${environment.variables.ROOT_DIR}/src/client/build`));
